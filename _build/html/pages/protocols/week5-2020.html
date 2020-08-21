@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Week 4: Mapping with bowtie2 &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Week 5: Binning genomes with anvi’o" href="week6-2020.html" />
+    <link rel="prev" title="Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML" href="week4-2020.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week3-2020.html">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week4-2020.html">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Week 4: Mapping with bowtie2</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#log-in-to-the-remote-server">1. Log in to the remote server</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mapping-with-a-toy-dataset">Mapping with a toy dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#make-new-directory">2. Make new directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-data">3. Copy data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-index">4. Build index</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#map">5. Map!</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#look-at-sam-file-output">6. Look at SAM file output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#samtools">7. samtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#samtools-sort">8. samtools sort</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#index-the-reference-with-samtools">9. Index the reference with samtools</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#index-the-bam-file">10. Index the bam file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-to-local-computer">11. Copy to local computer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-in-igv">12. Visualize in IGV</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#compare-mappings">13. Compare mappings</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-new-mapping">14. Visualize new mapping</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#mapping-your-project-datasets">Mapping your project datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#map-to-project-datasets">15. Map to project datasets</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize">16. Visualize</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculating-coverage-generate-bed-file">17. Calculating coverage- generate bed file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-script-to-calculate-coverage">18. Run script to calculate coverage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#calculate-coverage-in-excel">19. Calculate coverage in Excel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#check-for-understanding">20. Check for understanding</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-your-mapping-files-to-the-shared-class-folder">21. Copy your mapping files to the shared class folder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#this-week-s-postlab-writeup">22. This week’s postlab writeup</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="week6-2020.html">Week 5: Binning genomes with anvi’o</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week7-2020.html">Week 6: Classifying taxonomy of short reads with mothur</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/general.html">General Stuff</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html">Bioinformatics Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html#legacy-items">Legacy Items</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Week 4: Mapping with bowtie2</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/protocols/week5-2020.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="week-4-mapping-with-bowtie2">
+<span id="week-4-mapping-with-bowtie2"></span><h1>Week 4: Mapping with bowtie2<a class="headerlink" href="#week-4-mapping-with-bowtie2" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="log-in-to-the-remote-server">
+<span id="log-in-to-the-remote-server"></span><h2>1. Log in to the remote server<a class="headerlink" href="#log-in-to-the-remote-server" title="Permalink to this headline">¶</a></h2>
+<p>Open up your Terminal window and ssh in to baross.</p>
+</div>
+<div class="section" id="mapping-with-a-toy-dataset">
+<span id="mapping-with-a-toy-dataset"></span><h2>Mapping with a toy dataset<a class="headerlink" href="#mapping-with-a-toy-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="make-new-directory">
+<span id="make-new-directory"></span><h3>2. Make new directory<a class="headerlink" href="#make-new-directory" title="Permalink to this headline">¶</a></h3>
+<p>We’re going to start by mapping the sequencing reads from a genome sequence of a type of archaeon (<em>Sulfolobus acidocaldarius</em>– you’ve seen it before) against a scaffold from a very closely related species.</p>
+<p>The sequencing reads from from one strain of <em>Sulfolobus acidocaldarius</em>, and the reference sequence that they are mapping to is from a very closely related strain of <em>Sulfolobus acidocaldarius</em>.</p>
+<p>In your home directory, make a new directory called “mapping,” then change into that directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">mapping</span>
+<span class="n">cd</span> <span class="n">mapping</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-data">
+<span id="copy-data"></span><h3>3. Copy data<a class="headerlink" href="#copy-data" title="Permalink to this headline">¶</a></h3>
+<p>Copy this week’s toy datasets into your directory. You’re going to copy:
+-the reference sequence (toy_dataset_contig_for_mapping.fasta)
+-the reads that you will map to the reference (toy_dataset_reads_for_mapping.fasta)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">toy_datasets</span><span class="o">/</span><span class="n">toy_dataset_reads_for_mapping</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">toy_datasets</span><span class="o">/</span><span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-index">
+<span id="build-index"></span><h3>4. Build index<a class="headerlink" href="#build-index" title="Permalink to this headline">¶</a></h3>
+<p>You’re going to be mapping short reads to a longer reference sequence. The first thing you have to do is prepare an index of your reference so that the mapping software can map to it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bowtie2</span><span class="o">-</span><span class="n">build</span> <span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">fasta</span> <span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">btindex</span>
+</pre></div>
+</div>
+<p>-<code class="docutils literal notranslate"><span class="pre">bowtie2-build</span></code> is the program that indexes your reference.
+-The first argument gives the reference dataset name.
+-The second argument provides the name you want to give to the index.</p>
+</div>
+<div class="section" id="map">
+<span id="map"></span><h3>5. Map!<a class="headerlink" href="#map" title="Permalink to this headline">¶</a></h3>
+<p>Now, map! This will take a few steps.</p>
+<p>First, you make what is called a SAM file. It’s a human-readable version of a BAM file, which we learned about previously in class.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">bowtie2</span></code> is the name of the mapping program.
+-<code class="docutils literal notranslate"><span class="pre">-x</span></code> is the flag that provides the name of the index you just made.
+-<code class="docutils literal notranslate"><span class="pre">-f</span></code> means that the reads you are mapping are in fasta, not fastq, format.
+-<code class="docutils literal notranslate"><span class="pre">-U</span></code> means that the reads are not paired. (They aren’t in this dataset.)
+-<code class="docutils literal notranslate"><span class="pre">-S</span></code> provides the name of your output file, which is in SAM format.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bowtie2</span> <span class="o">-</span><span class="n">x</span> <span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">btindex</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">U</span> <span class="n">toy_dataset_reads_for_mapping</span><span class="o">.</span><span class="n">fasta</span> <span class="o">-</span><span class="n">S</span> <span class="n">toy_dataset_mapped_species1</span><span class="o">.</span><span class="n">sam</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="look-at-sam-file-output">
+<span id="look-at-sam-file-output"></span><h3>6. Look at SAM file output<a class="headerlink" href="#look-at-sam-file-output" title="Permalink to this headline">¶</a></h3>
+<p>If you look at the output file with <code class="docutils literal notranslate"><span class="pre">less</span></code>, you can see that it is human-readable (sort of). It tells you exactly which reads mapped, and where they mapped on the reference, and what the differences were between the reference and the mapped reads. This can sometimes be useful if you want to parse it yourself with your own scripts– but there’s a whole suite of tools in a package called <code class="docutils literal notranslate"><span class="pre">samtools</span></code> that we’ll rely on to do that next.</p>
+</div>
+<div class="section" id="samtools">
+<span id="samtools"></span><h3>7. samtools<a class="headerlink" href="#samtools" title="Permalink to this headline">¶</a></h3>
+<p>Now you will use a package called <code class="docutils literal notranslate"><span class="pre">samtools</span></code> to convert the SAM file into a non-human-readable BAM file. You’ve heard of BAM files before– now you get to make one.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">view</span> <span class="o">-</span><span class="n">bS</span> <span class="n">toy_dataset_mapped_species1</span><span class="o">.</span><span class="n">sam</span> <span class="o">&gt;</span> <span class="n">toy_dataset_mapped_species1</span><span class="o">.</span><span class="n">bam</span>
+</pre></div>
+</div>
+<p>-<code class="docutils literal notranslate"><span class="pre">samtools</span></code> is a package used to manipulate and work with mapping files. samtools view is one program within the whole samtools package.
+-The flag <code class="docutils literal notranslate"><span class="pre">-bS</span></code> is not BS! It tells samtools to convert a bam file to a sam file. (Bioinformatics jokes = still not very funny.)</p>
+</div>
+<div class="section" id="samtools-sort">
+<span id="samtools-sort"></span><h3>8. samtools sort<a class="headerlink" href="#samtools-sort" title="Permalink to this headline">¶</a></h3>
+<p>And because this is so fun, we get to do some more bookkeeping. Sort your bam file so that later programs have an easier time parsing it:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">sort</span> <span class="n">toy_dataset_mapped_species1</span><span class="o">.</span><span class="n">bam</span> <span class="o">-</span><span class="n">o</span> <span class="n">toy_dataset_mapped_species1_sorted</span><span class="o">.</span><span class="n">bam</span>
+</pre></div>
+</div>
+<p>-<code class="docutils literal notranslate"><span class="pre">samtools</span> <span class="pre">sort</span></code> is the name of the program used for sorting
+-The first argument provides the name of the bam file you want to sort
+-The <code class="docutils literal notranslate"><span class="pre">-o</span></code> flag gives the name of the output file you want.</p>
+</div>
+<div class="section" id="index-the-reference-with-samtools">
+<span id="index-the-reference-with-samtools"></span><h3>9. Index the reference with samtools<a class="headerlink" href="#index-the-reference-with-samtools" title="Permalink to this headline">¶</a></h3>
+<p>In order to visualize your mapping, you have to <strong>index your reference</strong>. Because indexing is SO MUCH FUN. This time we are indexing with samtools instead of bowtie2.</p>
+<p>(<strong>NOTE!!</strong>: you only need to do this step if you’re going to visualize your mapping with IGV, as we’re about to do now. In the future, if you don’t intend to visualize your mapping, then you don’t need to bother with this step.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">faidx</span> <span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">fasta</span>
+</pre></div>
+</div>
+<p>-<code class="docutils literal notranslate"><span class="pre">samtools</span> <span class="pre">faidx</span></code> is the name of the program that indexes the reference.
+-The first argument provides the name of the index, which should be your reference file.</p>
+</div>
+<div class="section" id="index-the-bam-file">
+<span id="index-the-bam-file"></span><h3>10. Index the bam file<a class="headerlink" href="#index-the-bam-file" title="Permalink to this headline">¶</a></h3>
+<p>Almost there! Now you index the bam file that you just made because WE LOVE INDEXING.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">index</span> <span class="n">toy_dataset_mapped_species1_sorted</span><span class="o">.</span><span class="n">bam</span>
+</pre></div>
+</div>
+<p>-<code class="docutils literal notranslate"><span class="pre">samtools</span> <span class="pre">index</span></code> is the name of the program that indexes the bam files.
+-The first argument provides the name of a sorted bam file.</p>
+</div>
+<div class="section" id="copy-to-local-computer">
+<span id="copy-to-local-computer"></span><h3>11. Copy to local computer<a class="headerlink" href="#copy-to-local-computer" title="Permalink to this headline">¶</a></h3>
+<p>Now we’re going to visualize this. Copy the entire “mapping” folder over to your local computer using scp.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">-</span><span class="n">r</span> <span class="p">[</span><span class="n">your</span> <span class="n">username</span><span class="p">]</span><span class="nd">@baross</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span><span class="p">:</span><span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="p">[</span><span class="n">your</span> <span class="n">username</span><span class="p">]</span><span class="o">/</span><span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">mapping</span><span class="o">/</span> <span class="o">~/</span><span class="n">Desktop</span>
+</pre></div>
+</div>
+<p><em>Remember, to use scp, you should open a new Terminal window that is NOT logged in to baross. The above command copies the folder at toy_dataset_directory/mapping to your local computer’s Desktop.</em></p>
+</div>
+<div class="section" id="visualize-in-igv">
+<span id="visualize-in-igv"></span><h3>12. Visualize in IGV<a class="headerlink" href="#visualize-in-igv" title="Permalink to this headline">¶</a></h3>
+<p>Find the IGV Viewer on your local computer and open it. <strong>First,</strong> click ‘Genomes’ –&gt; ‘Load Genome from File’ and find your reference file (‘toy_dataset_contig_for_mapping.fasta’). <strong>Next,</strong> click ‘File’ –&gt; ‘Load from File’ and open your sorted bam file. You should be able to visualize the mapping. Along the top, you’ll see the coordinates of your reference sequence. Below that, you’ll see a graph showing the coverage of each base pair along your reference sequence. Below that, you’ll see each read mapped to each position. The arrows indicate the direction of the read; white reads are reads that mapped to two different locations in your reference. Single nucleotide variants in the reads are marked with colored letters; insertions are marked with a purple bracket, and deletions are marked with a horizontal black line. More information can be found at the link below.</p>
+<p>Link to <a class="reference external" href="http://software.broadinstitute.org/software/igv/AlignmentData">IGV viewer</a></p>
+</div>
+<div class="section" id="compare-mappings">
+<span id="compare-mappings"></span><h3>13. Compare mappings<a class="headerlink" href="#compare-mappings" title="Permalink to this headline">¶</a></h3>
+<p>We’re going to compare and contrast this mapping with another one. Now we’re use the sequencing reads from a third very closely related strain of <em>Sulfolobus acidocaldarius</em>, and we’re going to map those reads to the original reference sequence so that we can compare the mapping.</p>
+<p>All of the commands are listed below. First, you will copy the second file to your directory (see below). You have already indexed the reference file. Then you map, convert SAM to BAM, sort, and then index.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">toy_datasets</span><span class="o">/</span><span class="n">toy_dataset_reads_for_mapping_species2</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+<span class="n">bowtie2</span> <span class="o">-</span><span class="n">x</span> <span class="n">toy_dataset_contig_for_mapping</span><span class="o">.</span><span class="n">btindex</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">U</span> <span class="n">toy_dataset_reads_for_mapping_species2</span><span class="o">.</span><span class="n">fasta</span> <span class="o">-</span><span class="n">S</span> <span class="n">toy_dataset_mapped_species2</span><span class="o">.</span><span class="n">sam</span>
+<span class="n">samtools</span> <span class="n">view</span> <span class="o">-</span><span class="n">bS</span> <span class="n">toy_dataset_mapped_species2</span><span class="o">.</span><span class="n">sam</span> <span class="o">&gt;</span> <span class="n">toy_dataset_mapped_species2</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">samtools</span> <span class="n">sort</span> <span class="n">toy_dataset_mapped_species2</span><span class="o">.</span><span class="n">bam</span> <span class="o">-</span><span class="n">o</span> <span class="n">toy_dataset_mapped_species2_sorted</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">samtools</span> <span class="n">index</span> <span class="n">toy_dataset_mapped_species2_sorted</span><span class="o">.</span><span class="n">bam</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualize-new-mapping">
+<span id="visualize-new-mapping"></span><h3>14. Visualize new mapping<a class="headerlink" href="#visualize-new-mapping" title="Permalink to this headline">¶</a></h3>
+<p>Copy the new data files to your local computer using scp like in step 11, and then visualize both of them in IGV viewer. Since you have already loaded the reference file and reads from your first mapping, all you have to do is click ‘File’ –&gt; ‘Load from File’ and click on your new bam file. You should be able to see them side by side.</p>
+<p><strong>Answer these questions for this week’s postlab assignment.</strong></p>
+<p><strong>Check for understanding, Question 1:</strong>
+Describe the large-scale differences between the mapped reads from species 1 and species 2, and explain what this mapping tells us about the relative genome structure of the two genomes that we mapped. If we compared this genomic region in a dot plot, what would it look like?</p>
+</div>
+</div>
+<div class="section" id="mapping-your-project-datasets">
+<span id="mapping-your-project-datasets"></span><h2>Mapping your project datasets<a class="headerlink" href="#mapping-your-project-datasets" title="Permalink to this headline">¶</a></h2>
+<p>Now we’re going to map your project datasets. Remember that these are metagenomes, not a genome, so the data will be a bit more complex to interpret.</p>
+<p>We’re going to map your raw reads against your assembled contigs. Why would we do this, you ask? A few reasons:</p>
+<p>-to look for single nucleotide variants in specific genes.</p>
+<p>-to quantify the relative abundances of different genes, and determine whether specific genes have better coverage than others.</p>
+<p>-to quantify the relative abundances of specific taxa, and determine whether specific taxa are more abundant than others.</p>
+<p><strong>As you consider this, answer the following question for this week’s lab questions:</strong></p>
+<p><strong>Check for understanding, Question 2:</strong>
+If you wanted to quantify the relative abundances of specific genes in your sample, why couldn’t you simply count the number of times your gene appears in your assembly?</p>
+<div class="section" id="map-to-project-datasets">
+<span id="map-to-project-datasets"></span><h3>15. Map to project datasets<a class="headerlink" href="#map-to-project-datasets" title="Permalink to this headline">¶</a></h3>
+<p>Change directory into your project dataset directory folder. We’re going to map your raw reads against your assembled contigs (not your ORFs). Make sure you know where your project assembly is and where your raw reads are. Follow the instructions to map your raw reads back to your assembled contigs. For example, if you were mapping the dataset ERR599166_1mill_sample.fasta and your assembly was called ERR599166_assembly_formatted.fa, you might do something like this (below). Please be sure to use the assembled files that you’ve already run through anvi-script-reformat-fasta, which you should have done in our first computer lab.</p>
+<p>One more thing. Your project datasets are very large– you each have 10 million reads. So mapping will take longer than for the toy datasets. So we’re going to add an extra flag (-p) to the mapping step to tell the computer to use more than one processor so the process goes faster. You’ll each use 5 for this process. The mapping may still take about 5-10 minutes, so have patience!</p>
+<p>An example set of commands is shown below. <strong>Remember to replace the dataset names here with your own project datasets!</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bowtie2</span><span class="o">-</span><span class="n">build</span> <span class="n">ERR599166_assembly_formatted</span><span class="o">.</span><span class="n">fa</span> <span class="n">ERR599166_assembly_formatted</span><span class="o">.</span><span class="n">btindex</span>
+<span class="n">bowtie2</span> <span class="o">-</span><span class="n">x</span> <span class="n">ERR599166_assembly_formatted</span><span class="o">.</span><span class="n">btindex</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">U</span> <span class="n">ERR599166_sample</span><span class="o">.</span><span class="n">fasta</span> <span class="o">-</span><span class="n">S</span> <span class="n">ERR599166_mapped</span><span class="o">.</span><span class="n">sam</span> <span class="o">-</span><span class="n">p</span> <span class="mi">5</span>
+<span class="n">samtools</span> <span class="n">view</span> <span class="o">-</span><span class="n">bS</span> <span class="n">ERR599166_mapped</span><span class="o">.</span><span class="n">sam</span> <span class="o">&gt;</span> <span class="n">ERR599166_mapped</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">samtools</span> <span class="n">sort</span> <span class="n">ERR599166_mapped</span><span class="o">.</span><span class="n">bam</span> <span class="o">-</span><span class="n">o</span> <span class="n">ERR599166_mapped_sorted</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">samtools</span> <span class="n">faidx</span> <span class="n">ERR599166_assembled</span><span class="o">.</span><span class="n">fa</span>
+<span class="n">samtools</span> <span class="n">index</span> <span class="n">ERR599166_mapped_sorted</span><span class="o">.</span><span class="n">bam</span>
+</pre></div>
+</div>
+<p><em>Note that this command assumes that your raw reads and your assembly are in the same directory you’re in. If they are not, you will need to either copy them over or use the correct path in your commands. (A reminder: the path simply gives directions to the computer for where to find a file.) For example, if you are in a mapping directory, your reads file is one directory up in the file hierarchy, and your assembled reads are in your assembly file, you might have to type something like this:</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">bowtie2</span> <span class="pre">-x</span> <span class="pre">../assembly/ERR599166_assembled.btindex</span> <span class="pre">-f</span> <span class="pre">-U</span> <span class="pre">../ERR599166_1mill_sample.fasta</span> <span class="pre">-S</span> <span class="pre">ERR599166_mapped.sam</span></code></p>
+</div>
+<div class="section" id="visualize">
+<span id="visualize"></span><h3>16. Visualize<a class="headerlink" href="#visualize" title="Permalink to this headline">¶</a></h3>
+<p>When you visualize this in IGV, remember that you have multiple contigs. So you have to click the drop-down menu at the top and choose which contig you wish to visualize.</p>
+</div>
+<div class="section" id="calculating-coverage-generate-bed-file">
+<span id="calculating-coverage-generate-bed-file"></span><h3>17. Calculating coverage- generate bed file<a class="headerlink" href="#calculating-coverage-generate-bed-file" title="Permalink to this headline">¶</a></h3>
+<p>You were able to visualize the mappings in IGV, but sometimes you just want to have a number: for example, you might want to know the average coverage across a specific gene, and compare that to the average coverage of another gene in order to compare their relative abundances in the sample. So, next we’re going to calculate gene coverages based on your mapping.</p>
+<p>First we’re going to make what’s called a bed file. We will use it to find the average coverage of every single open reading frame in your dataset. Please make sure that your contigs have names that are something like c_00000000001 and your ORFs have names that are something like c_00000000001_1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_bed_file_from_gff_file_prokka</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">your</span> <span class="n">gff</span> <span class="n">file</span> <span class="kn">from</span> <span class="nn">prokka</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_bed_file_from_gff_file_prokka</span><span class="o">.</span><span class="n">py</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">gff</span>
+</pre></div>
+</div>
+<p>This will create a bed file that ends in .bed. You can take a look at it if you wish– it should have the contig name, the coordinates of your ORF, and the name of your ORF.</p>
+</div>
+<div class="section" id="run-script-to-calculate-coverage">
+<span id="run-script-to-calculate-coverage"></span><h3>18. Run script to calculate coverage<a class="headerlink" href="#run-script-to-calculate-coverage" title="Permalink to this headline">¶</a></h3>
+<p>Now run a script that will use your bed file and will calculate the read depth for every single ORF in your ORF file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">bedcov</span> <span class="p">[</span><span class="n">your</span> <span class="n">bed</span> <span class="n">file</span><span class="p">]</span> <span class="p">[</span><span class="n">your</span> <span class="nb">sorted</span> <span class="n">bam</span> <span class="n">file</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">[</span> <span class="n">an</span> <span class="n">output</span> <span class="n">file</span> <span class="n">that</span> <span class="n">ends</span> <span class="ow">in</span> <span class="n">_ORF_coverage</span><span class="o">.</span><span class="n">txt</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">samtools</span> <span class="n">bedcov</span> <span class="n">ERR599166_assembled</span><span class="o">.</span><span class="n">bed</span> <span class="n">ERR599166_mapped_sorted</span><span class="o">.</span><span class="n">bam</span> <span class="o">&gt;</span> <span class="n">ERR599166_ORF_coverage</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>It is extremely important that you ran <strong>both</strong> bowtie2 and prokka on the <u>reformatted</u> assembly! If you get errors, this is probably because you did not run them against the reformatted assembly!!</p>
+<p>How do you check that you ran it on the reformatted dataset?
+First, check your Prokka output:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">gff</span>
+</pre></div>
+</div>
+<p>It should look something like this, with the second column showing numbers like c_000000000001 and so on.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##gff-version 3</span>
+<span class="c1">##sequence-region c_000000000001 1 2569</span>
+<span class="c1">##sequence-region c_000000000002 1 1660</span>
+<span class="c1">##sequence-region c_000000000003 1 1376</span>
+<span class="c1">##sequence-region c_000000000004 1 1037</span>
+<span class="c1">##sequence-region c_000000000005 1 945</span>
+<span class="c1">##sequence-region c_000000000006 1 917</span>
+<span class="c1">##sequence-region c_000000000007 1 902</span>
+<span class="c1">##sequence-region c_000000000008 1 892</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>If it looks more like this, you did not run prokka against the reformatted dataset.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">##gff-version 3</span>
+<span class="c1">##sequence-region contig-100_0 1 44454</span>
+<span class="c1">##sequence-region contig-100_1 1 44231</span>
+<span class="c1">##sequence-region contig-100_2 1 35217</span>
+<span class="c1">##sequence-region contig-100_3 1 29595</span>
+<span class="c1">##sequence-region contig-100_4 1 29534</span>
+<span class="o">...</span>
+</pre></div>
+</div>
+<p>If it looks like this, then you should run <code class="docutils literal notranslate"><span class="pre">anvi-script-reformat</span></code> again and then run prokka again. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">script</span><span class="o">-</span><span class="n">reformat</span><span class="o">-</span><span class="n">fasta</span> <span class="n">contig</span><span class="o">-</span><span class="mf">100.</span><span class="n">fa</span> <span class="o">-</span><span class="n">o</span> <span class="n">ERR599899_assembled_reformatted</span><span class="o">.</span><span class="n">fa</span> <span class="o">-</span><span class="n">l</span> <span class="mi">0</span> <span class="o">--</span><span class="n">simplify</span><span class="o">-</span><span class="n">names</span>
+<span class="n">prokka</span> <span class="n">ERR599899_assembled_reformatted</span><span class="o">.</span><span class="n">fa</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">prokka_ERR599899</span>
+</pre></div>
+</div>
+<p>You should also make sure that you ran bowtie2 against the reformatted version. How do you know? Go back up up to Step 13 in this week’s protocol and check the assembly file with <code class="docutils literal notranslate"><span class="pre">less</span></code>. Make sure the contigs start with c_00000001 and not contig-100_0.</p>
+</div>
+<div class="section" id="calculate-coverage-in-excel">
+<span id="calculate-coverage-in-excel"></span><h3>19. Calculate coverage in Excel<a class="headerlink" href="#calculate-coverage-in-excel" title="Permalink to this headline">¶</a></h3>
+<p>It will give you a file that ends in <code class="docutils literal notranslate"><span class="pre">ORF_coverage.txt</span></code>. Use scp to move it to your local computer, then open with Excel. It should give the name of your contig, the start coordinate, the stop coordinate, the name of your open reading frame, and then the sum of the per-base coverage. To get the average coverage, divide the sum of the per-base coverage by the difference between the stop and start coordinates. In other words, type this in the top column and then fill down to the bottom:
+=E1/(C1-B1)</p>
+<p>Now you have the average coverage of every ORF for this particular bam file, and you should be able to match the name of your ORF from Prokka to the ORF in this output file.</p>
+</div>
+<div class="section" id="check-for-understanding">
+<span id="check-for-understanding"></span><h3>20. Check for understanding<a class="headerlink" href="#check-for-understanding" title="Permalink to this headline">¶</a></h3>
+<p>This is a really common type of analysis for ‘omics-based studies– you can compare the coverage of specific genes of interest. For example, you might compare the coverage of genes related to photosythesis, respiration, and nitrogen fixation if you’re interested in how abundant those metabolisms are in the community. We also use a very similar technique when we’re doing expression analyses using something like RNASeq (more on that in coming weeks).</p>
+<p><strong>Check for understanding, Question 3:</strong></p>
+<p>As you scroll through the data file reporting the average coverage of all of your ORFs, which ORF had the highest coverage? What did it encode, according to your Prokka file or BLAST? In one or two sentences, speculate on why that gene may have had the highest coverage of all the genes in your dataset. NOTE! The genes with the highest coverage were probably really short and resulted from Illumina sequencing error– i.e., ATATATATATATAT. IDBA-UD orders contigs by length, so I recommend skipping the contigs that are really short (high numbers in the contig name) and find the contig with the highest coverage that was unlikely to be a sequencing error.</p>
+</div>
+<div class="section" id="copy-your-mapping-files-to-the-shared-class-folder">
+<span id="copy-your-mapping-files-to-the-shared-class-folder"></span><h3>21. Copy your mapping files to the shared class folder<a class="headerlink" href="#copy-your-mapping-files-to-the-shared-class-folder" title="Permalink to this headline">¶</a></h3>
+<p>Please copy your bam files, bai files, bed files, and your ORF coverage files over to the class shared folder.
+Remember to give them names that are uniform and recognizable (see below example, and substitute your file names for the ones below).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="n">ERR598995_mapped_sorted</span><span class="o">.</span><span class="n">bam</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">mapping</span>
+<span class="n">cp</span> <span class="n">ERR598995_mapped_sorted</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">bai</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">mapping</span>
+<span class="n">cp</span> <span class="n">ERR598995_assembly_ORFs</span><span class="o">.</span><span class="n">bed</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">mapping</span>
+<span class="n">cp</span> <span class="n">ERR598995_ORF_coverage</span><span class="o">.</span><span class="n">txt</span>  <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">mapping</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="this-week-s-postlab-writeup">
+<span id="this-week-s-postlab-writeup"></span><h3>22. This week’s postlab writeup<a class="headerlink" href="#this-week-s-postlab-writeup" title="Permalink to this headline">¶</a></h3>
+<p>For this week’s post-lab writeup:</p>
+<p><strong>Mini Research Question</strong></p>
+<p>Write either a question or generate a hypothesis about the relative coverage of this set of genes with respect to your project datasets. This question/hypothesis should include a comparison between your own project dataset and another dataset, and it should be couched within the larger ecological context.</p>
+<p>You do have some information to act as a basis for your question or hypothesis. For example, the KEGG metabolisms page you saw last week provides good information about which genes are used in specific pathways. You also have some metadata related to your project sample in the Project Dataset Excel spreadsheet on the Moodle.</p>
+<p><em>Example #1:</em>
+I hypothesize that there will be lower coverage of genes related to photosynthesis (i.e. the psb genes) in the mesopelagic zone relative to the surface. This is because at the surface there will be more organisms that photosynthesize compared to the mesopelagic zone, where less light is available. Therefore, a lower proportion of genes in the microbial community in the mesopelagic zone will be related to photosynthesis compared to the surface, and therefore, fewer reads will map to photosynthesis genes in the mesopelagic zone.</p>
+<p><em>Example #2:</em>
+I hypothesize that there will be higher coverage of genes related to viruses in my sample relative to the deeper samples because there are more viruses in surface waters than in deeper waters, simply because there are more organisms to infect in surface waters.</p>
+<p>Once you’ve identified the set of genes related to a specific metabolism/function/type of organism, and you have written a question or generated a hypothesis, find the average coverage to each of those ORFs in your dataset. Remember that more than one ORF may have that function.</p>
+<p>Many of you will probably want to compare your mapping of your own reads to your own dataset to a mapping made by one of your classmates to their own dataset. The bam files and ORF coverage files should be saved in /Accounts/Genomics_Bioinformatics_shared/mapping.</p>
+<p><strong>Describe your results and create at least one graph to visualize those results. This should represent a mini ‘Results’ section in a lab report or paper. Interpret your results within the context of the ecosystem you are investigating. This should represent a mini ‘Discussion’ section in a lab report or paper.</strong></p>
+<p><strong>Compile your 3 “check for understanding” questions and your mini research question together and submit on Moodle by lab time next week.</strong></p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="week6-2020.html" class="btn btn-neutral float-right" title="Week 5: Binning genomes with anvi’o" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="week4-2020.html" class="btn btn-neutral" title="Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

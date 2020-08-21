@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Bioinformatics Tools &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Contributing" href="../contributing.html" />
+    <link rel="prev" title="General Stuff" href="general.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/week3-2020.html">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/week4-2020.html">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/week5-2020.html">Week 4: Mapping with bowtie2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/week6-2020.html">Week 5: Binning genomes with anvi’o</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../protocols/week7-2020.html">Week 6: Classifying taxonomy of short reads with mothur</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="general.html">General Stuff</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Bioinformatics Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#idba-ud">IDBA-UD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#prokka">Prokka</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#blast">BLAST</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#blastp">blastp</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tblastn">tblastn</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-tree">Making a tree</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mapping">Mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#anvi-o">anvi’o</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#mothur">mothur</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="#legacy-items">Legacy Items</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prodigal">Prodigal</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#interproscan">Interproscan</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Bioinformatics Tools</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/reference/tools.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="bioinformatics-tools">
+<span id="bioinformatics-tools"></span><h1>Bioinformatics Tools<a class="headerlink" href="#bioinformatics-tools" title="Permalink to this headline">¶</a></h1>
+<p>Summary of purpose &amp; usage of bioinformatics tools seen in class.</p>
+<div class="section" id="idba-ud">
+<span id="idba-ud"></span><h2>IDBA-UD<a class="headerlink" href="#idba-ud" title="Permalink to this headline">¶</a></h2>
+<p><strong>Assembles reads into contigs</strong></p>
+<p>Example usage (replace names in brackets with your own names and remove brackets):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">idba_ud</span> <span class="o">-</span><span class="n">r</span> <span class="p">[</span><span class="n">reads</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">o</span> <span class="p">[</span><span class="n">output</span> <span class="n">folder</span> <span class="n">name</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">-r</span></code> gives it the “path” (directions) to the reads for your reads. <code class="docutils literal notranslate"><span class="pre">../</span></code> means it is in the directory outside of the one you’re in.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-o</span></code> flag tells the program what you want the output directory to be called.</li>
+</ul>
+</div>
+<div class="section" id="prokka">
+<span id="prokka"></span><h2>Prokka<a class="headerlink" href="#prokka" title="Permalink to this headline">¶</a></h2>
+<p><strong>Finds ORFs in assembled contigs and annotates them</strong></p>
+<p>Example usage (replace names in brackets with your own names and remove brackets):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prokka</span> <span class="p">[</span><span class="n">assembled</span> <span class="n">contigs</span> <span class="n">fasta</span> <span class="n">file</span><span class="p">]</span> <span class="o">--</span><span class="n">outdir</span> <span class="p">[</span><span class="n">name</span> <span class="n">of</span> <span class="n">output</span> <span class="n">directory</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>To get a summary of how many ORFs were assigned to different COG categories based on your Prokka data, do this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_ORF_COG_categories</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">name</span> <span class="n">of</span> <span class="n">your</span> <span class="n">Prokka</span> <span class="n">tsv</span> <span class="n">file</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="blast">
+<span id="blast"></span><h2>BLAST<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h2>
+<p><strong>Find a match to a sequence in your own sequence file, not the NCBI database</strong></p>
+<p>Example usage (replace names in brackets with your own names and remove brackets):</p>
+<p>First, make a BLAST database:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">makeblastdb</span> <span class="o">-</span><span class="ow">in</span> <span class="p">[</span><span class="n">example</span> <span class="n">sequence</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">dbtype</span> <span class="p">[</span><span class="n">prot</span> <span class="ow">or</span> <span class="n">nucl</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>-in gives the name of the file you want to BLAST against.</li>
+<li>for dbtype, use <code class="docutils literal notranslate"><span class="pre">prot</span></code> for an amino acid file and <code class="docutils literal notranslate"><span class="pre">nucl</span></code> for a nucleotide file.</li>
+</ul>
+<p>Then, do your BLAST.</p>
+<div class="section" id="blastp">
+<span id="blastp"></span><h3>blastp<a class="headerlink" href="#blastp" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastp</span> <span class="o">-</span><span class="n">query</span> <span class="p">[</span><span class="n">example</span> <span class="n">query</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">db</span> <span class="p">[</span><span class="n">example</span> <span class="n">database</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">evalue</span> <span class="mf">1e-05</span> <span class="o">-</span><span class="n">outfmt</span> <span class="mi">6</span> <span class="o">-</span><span class="n">out</span> <span class="p">[</span><span class="n">example_output</span><span class="o">.</span><span class="n">blastp</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">blastp</span></code> does a protein vs protein blast. (other choices are <code class="docutils literal notranslate"><span class="pre">blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">blastx</span></code>, <code class="docutils literal notranslate"><span class="pre">tblastn</span></code>, <code class="docutils literal notranslate"><span class="pre">tblastx</span></code>.)</li>
+<li><code class="docutils literal notranslate"><span class="pre">-query</span></code> defines your blast query– in this case, the Pfam seed sequences for the CRISPR RAMP proteins.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-db</span></code> defines your database– in this case, the toy assembly ORFs.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-evalue</span></code> defines your maximum e-value, in this case 1x10-5</li>
+<li><code class="docutils literal notranslate"><span class="pre">-outfmt</span></code> defines the output format of your blast results. option 6 is common; you can check out https://www.ncbi.nlm.nih.gov/books/NBK279675/ for other options.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-out</span></code> defines the name of your output file. I like to title mine with the general format <code class="docutils literal notranslate"><span class="pre">query_vs_db.blastp</span></code> or something similar.</li>
+</ul>
+</div>
+<div class="section" id="tblastn">
+<span id="tblastn"></span><h3>tblastn<a class="headerlink" href="#tblastn" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">tblastn</span> <span class="o">-</span><span class="n">query</span> <span class="p">[</span><span class="n">example</span> <span class="n">query</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">db</span> <span class="p">[</span><span class="n">example</span> <span class="n">database</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">evalue</span> <span class="mf">1e-05</span> <span class="o">-</span><span class="n">outfmt</span> <span class="mi">6</span> <span class="o">-</span><span class="n">out</span> <span class="p">[</span><span class="n">example_output</span><span class="o">.</span><span class="n">tblastn</span><span class="p">]</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">tblastn</span></code> does a protein vs translated nucleotide blast. (other choices are <code class="docutils literal notranslate"><span class="pre">blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">blastx</span></code>, <code class="docutils literal notranslate"><span class="pre">blastp</span></code>, <code class="docutils literal notranslate"><span class="pre">tblastx</span></code>.)</li>
+<li><code class="docutils literal notranslate"><span class="pre">-query</span></code> defines your blast query– in this case, the Pfam seed sequences for the CRISPR RAMP proteins.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-db</span></code> defines your database– in this case, the toy assembly ORFs.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-evalue</span></code> defines your maximum e-value, in this case 1x10-5</li>
+<li><code class="docutils literal notranslate"><span class="pre">-outfmt</span></code> defines the output format of your blast results. option 6 is common; you can check out https://www.ncbi.nlm.nih.gov/books/NBK279675/ for other options.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-out</span></code> defines the name of your output file. I like to title mine with the general format <code class="docutils literal notranslate"><span class="pre">query_vs_db.blastp</span></code> or something similar.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="making-a-tree">
+<span id="making-a-tree"></span><h2>Making a tree<a class="headerlink" href="#making-a-tree" title="Permalink to this headline">¶</a></h2>
+<p><strong>First make an alignment with muscle, then make a tree with RAxML</strong></p>
+<p>First, use nano or some other text editing tool to make a fasta file with your sequences of interest. The following is an example of how to make a tree using amino acid (not nucleotide) sequences.</p>
+<p>Example usage (replace names in brackets with your own names and remove brackets):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">muscle</span> <span class="o">-</span><span class="ow">in</span> <span class="p">[</span><span class="n">example_sequence_file</span><span class="o">.</span><span class="n">fasta</span><span class="p">]</span> <span class="o">--</span><span class="n">out</span> <span class="p">[</span><span class="n">example_sequence_file_aligned</span><span class="o">.</span><span class="n">afa</span><span class="p">]</span>
+<span class="n">convert_afa_to_phy</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">example_sequence_file_aligned</span><span class="o">.</span><span class="n">afa</span><span class="p">]</span>
+<span class="n">raxmlHPC</span><span class="o">-</span><span class="n">PTHREADS</span><span class="o">-</span><span class="n">AVX</span> <span class="o">-</span><span class="n">f</span> <span class="n">a</span> <span class="o">-</span><span class="c1"># 20 -m PROTGAMMAAUTO -p 12345 -x 12345 -s [example_sequence_file_aligned.phy] -n [example_tree_name.tree] -T 4</span>
+</pre></div>
+</div>
+<p>Open the RAxML_bipartitions.example_tree_name.tree file in ITOL.</p>
+</div>
+<div class="section" id="mapping">
+<span id="mapping"></span><h2>Mapping<a class="headerlink" href="#mapping" title="Permalink to this headline">¶</a></h2>
+<p><strong>Map short reads against a reference</strong></p>
+<p>Example usage (replace names in brackets with your own names and remove brackets):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">bowtie2</span><span class="o">-</span><span class="n">build</span> <span class="p">[</span><span class="n">reference</span> <span class="n">fasta</span> <span class="n">file</span><span class="p">]</span> <span class="p">[</span><span class="n">reference_file</span><span class="o">.</span><span class="n">btindex</span><span class="p">]</span>
+<span class="n">bowtie2</span> <span class="o">-</span><span class="n">x</span> <span class="p">[</span><span class="n">reference_file</span><span class="o">.</span><span class="n">btindex</span><span class="p">]</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">U</span> <span class="p">[</span><span class="n">reads_to_map</span><span class="o">.</span><span class="n">fasta</span><span class="p">]</span> <span class="o">-</span><span class="n">S</span> <span class="p">[</span><span class="n">output_file</span><span class="o">.</span><span class="n">sam</span><span class="p">]</span>
+<span class="n">samtools</span> <span class="n">view</span> <span class="o">-</span><span class="n">bS</span> <span class="p">[</span><span class="n">output_file</span><span class="o">.</span><span class="n">sam</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">[</span><span class="n">output_file</span><span class="o">.</span><span class="n">bam</span><span class="p">]</span>
+<span class="n">samtools</span> <span class="n">sort</span> <span class="p">[</span><span class="n">output_file</span><span class="o">.</span><span class="n">bam</span><span class="p">]</span> <span class="o">-</span><span class="n">o</span> <span class="p">[</span><span class="n">output_file_sorted</span><span class="o">.</span><span class="n">bam</span><span class="p">]</span>
+<span class="n">samtools</span> <span class="n">index</span> <span class="p">[</span><span class="n">output_file_sorted</span><span class="o">.</span><span class="n">bam</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>To get ORF coverage:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_bed_file_from_gff_file_prokka</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">your</span> <span class="n">gff</span> <span class="n">file</span> <span class="kn">from</span> <span class="nn">prokka</span><span class="p">]</span>
+<span class="n">samtools</span> <span class="n">bedcov</span> <span class="p">[</span><span class="n">your</span> <span class="n">bed</span> <span class="n">file</span><span class="p">]</span> <span class="p">[</span><span class="n">your</span> <span class="nb">sorted</span> <span class="n">bam</span> <span class="n">file</span><span class="p">]</span> <span class="o">&gt;</span> <span class="p">[</span> <span class="n">an</span> <span class="n">output</span> <span class="n">file</span> <span class="n">that</span> <span class="n">ends</span> <span class="ow">in</span> <span class="n">_ORF_coverage</span><span class="o">.</span><span class="n">txt</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="anvi-o">
+<span id="anvi-o"></span><h2>anvi’o<a class="headerlink" href="#anvi-o" title="Permalink to this headline">¶</a></h2>
+<p><strong>Make bins from metagenomic assemblies and BAM files</strong></p>
+<p>The protocol for week 6 laid out anvi’o step by step. The <a class="reference external" href="http://merenlab.org/2016/06/22/anvio-tutorial-v2/">anvi’o tutorial</a> is another good source of information.</p>
+</div>
+<div class="section" id="mothur">
+<span id="mothur"></span><h2>mothur<a class="headerlink" href="#mothur" title="Permalink to this headline">¶</a></h2>
+<p><strong>Analyze 16S data to find taxonomy, OTUS</strong></p>
+<p>The protocol for week 7 laid out mothur step by step. The <a class="reference external" href="https://www.mothur.org/wiki/MiSeq_SOP">mothur wiki</a> is another good source of information.</p>
+</div>
+</div>
+<div class="section" id="legacy-items">
+<span id="legacy-items"></span><h1>Legacy Items<a class="headerlink" href="#legacy-items" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prodigal">
+<span id="prodigal"></span><h2>Prodigal<a class="headerlink" href="#prodigal" title="Permalink to this headline">¶</a></h2>
+<p><strong>Finds ORFs in assembly file</strong></p>
+<p>Example usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir ORF_finding
+<span class="nb">cd</span> ORF_finding
+prodigal -i ../toy_assembly/toy_dataset_assembly_subsample.fa -o toy_assembly_ORFs.gbk -a toy_assembly_ORFs.faa -p single
+</pre></div>
+</div>
+<ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">-i</span></code> flag gives the input file, which is the assembly you just made.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-o</span></code> flag gives the output file in Genbank format</li>
+<li>The ‘-a” flag gives the output file in fasta format</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-p</span></code> flag states which procedure you’re using: whether this is a single genome or a metagenome. This toy dataset is &gt; a single genome so we are using –p single, but for your project dataset, you will use –p meta.</li>
+</ul>
+</div>
+<div class="section" id="interproscan">
+<span id="interproscan"></span><h2>Interproscan<a class="headerlink" href="#interproscan" title="Permalink to this headline">¶</a></h2>
+<p><strong>ORF Fasta File -&gt; Annotated TSV</strong></p>
+<p>Used to efficiently and effectively annotate proteins. Compares your open reading frames against several protein databases and looks for protein “signatures,” or regions that are highly conserved among proteins, and uses that to annotate your open reading frames. It will do this for every single open reading frame in your dataset, if it can find a match.</p>
+<p>Example usage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>interproscan.sh -i toy_assembly_ORFs.noasterisks.faa -f tsv
+</pre></div>
+</div>
+<ul class="simple">
+<li>The <code class="docutils literal notranslate"><span class="pre">-i</span></code> flag gives the input file, which is your file with ORF sequences identified by Prodigal, with the asterisks removed.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-f</span></code> flag tells Interproscan that the format you want is a tab-separated vars, or “tsv,” file.</li>
+</ul>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../contributing.html" class="btn btn-neutral float-right" title="Contributing" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="general.html" class="btn btn-neutral" title="General Stuff" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

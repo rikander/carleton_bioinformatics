@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Week 6: Classifying taxonomy of short reads with mothur &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="General Stuff" href="../reference/general.html" />
+    <link rel="prev" title="Week 5: Binning genomes with anvi’o" href="week6-2020.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week3-2020.html">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week4-2020.html">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week5-2020.html">Week 4: Mapping with bowtie2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week6-2020.html">Week 5: Binning genomes with anvi’o</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Week 6: Classifying taxonomy of short reads with mothur</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#using-mothur-to-profile-the-taxonomy-of-your-dataset">Using mothur to profile the taxonomy of your dataset</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#log-in">1. Log in</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-over-data">2. Copy over data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-mothur">3. Open mothur</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#create-groups-file">4. Create groups file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#look-at-the-groups-file">5. Look at the groups file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#merge-fasta-files-together">6. Merge FASTA files together</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#classify-your-sequences">7. Classify your sequences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#open-classified-sequences">8. Open classified sequences</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#share-your-data">9. Share your data</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#calculate-the-diversity-of-your-sample">10. Calculate the diversity of your sample</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#compare-diversity-with-metadata">11. Compare diversity with metadata</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#post-lab-assignment">12. Post-lab assignment</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/general.html">General Stuff</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html">Bioinformatics Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html#legacy-items">Legacy Items</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Week 6: Classifying taxonomy of short reads with mothur</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/protocols/week7-2020.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="week-6-classifying-taxonomy-of-short-reads-with-mothur">
+<span id="week-6-classifying-taxonomy-of-short-reads-with-mothur"></span><h1>Week 6: Classifying taxonomy of short reads with mothur<a class="headerlink" href="#week-6-classifying-taxonomy-of-short-reads-with-mothur" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction">
+<span id="introduction"></span><h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>Today we’re going to learn how to use sequence data to assess diversity across samples. We’ll learn how to:</p>
+<p>-classify the distribution of different types (taxa) of microbes in different datasets (i.e. what % are <em>Procholorococcus</em>, what % are SAR11, what % are Thaumarchaeota, and so on)</p>
+<p>-calculate diversity metrics to determine which sample sites had higher richness or evenness.</p>
+<p>Before you start, think about which datasets you’d like to compare to your own. Perhaps you want to compare a bunch of surface samples from different regions, or perhaps you want to compare the three depths from your region. This could also potentially feed right into your final project. Choose 3-5 samples to compare (including yours).</p>
+</div>
+<div class="section" id="using-mothur-to-profile-the-taxonomy-of-your-dataset">
+<span id="using-mothur-to-profile-the-taxonomy-of-your-dataset"></span><h2>Using mothur to profile the taxonomy of your dataset<a class="headerlink" href="#using-mothur-to-profile-the-taxonomy-of-your-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="log-in">
+<span id="log-in"></span><h3>1. Log in<a class="headerlink" href="#log-in" title="Permalink to this headline">¶</a></h3>
+<p>Once you have decided on what samples to compare, log on to baross using ssh on your Terminal. Then make a new directory and change directory into it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">~/</span><span class="n">project_directory</span><span class="o">/</span><span class="n">taxonomy</span>
+<span class="n">cd</span> <span class="n">project_directory</span><span class="o">/</span><span class="n">taxonomy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-over-data">
+<span id="copy-over-data"></span><h3>2. Copy over data<a class="headerlink" href="#copy-over-data" title="Permalink to this headline">¶</a></h3>
+<p>The Tara Ocean people have already identified all of the reads that matched 16S ribosomal RNA from their metagenomes, and they made separate FASTA files with just those reads. (Thanks, French scientists!) I copied those FASTA files into the directories listed in <code class="docutils literal notranslate"><span class="pre">/usr/local/data/Tara_datasets/</span></code>. Copy over all of the relevant 16S rRNA files that you will need into your new taxonomy folder.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Tara_datasets</span><span class="o">/</span><span class="p">[</span><span class="n">project</span> <span class="n">sample</span> <span class="n">site</span> <span class="n">of</span> <span class="n">interest</span><span class="p">]</span><span class="o">/</span><span class="p">[</span><span class="mi">16</span><span class="n">S</span> <span class="n">rRNA</span> <span class="n">data</span> <span class="n">file</span> <span class="n">of</span> <span class="n">interest</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>For example, you might do something like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Tara_datasets</span><span class="o">/</span><span class="n">Arabian_Sea</span><span class="o">/</span><span class="n">ERR598966_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Tara_datasets</span><span class="o">/</span><span class="n">coastal_South_Africa</span><span class="o">/</span><span class="n">ERR598972_MERGED_FASTQ_16SrRNA</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Tara_datasets</span><span class="o">/</span><span class="n">North_Pacific</span><span class="o">/</span><span class="n">ERR598995_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p><strong><em>Hot tip!</em></strong>
+If you want to copy over all of the 16S rRNA datasets from one folder, you could use the asterisk (wildcard). For example:
+<code class="docutils literal notranslate"><span class="pre">cp</span> <span class="pre">/usr/local/data/Tara_datasets/North_Pacific/*16S*</span> <span class="pre">.</span></code>
+That would copy over all of the files containing <code class="docutils literal notranslate"><span class="pre">16S</span></code> in their title in the North Pacific folder.</p>
+</div>
+<div class="section" id="open-mothur">
+<span id="open-mothur"></span><h3>3. Open mothur<a class="headerlink" href="#open-mothur" title="Permalink to this headline">¶</a></h3>
+<p>Now, we’re going to use a program called <code class="docutils literal notranslate"><span class="pre">mothur</span></code> to analyze these sequences. mothur is a bit different from other programs that we’ve used in that we can enter a mothur interface and type commands that are specific to mothur. To enter the mothur program, simply type this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mothur</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="create-groups-file">
+<span id="create-groups-file"></span><h3>4. Create groups file<a class="headerlink" href="#create-groups-file" title="Permalink to this headline">¶</a></h3>
+<p>Right now, the 16S rRNA-matching reads from each sample site are in separate files. Pretty soon we are going to merge all of your FASTA files together in order to compare them. Before we do that, we need to tell mothur how to tell them apart once they are merged. We do that with the make.group command. Replace the file names below with your 16S rRNA fasta file&nbsp;names. Substitute the group names&nbsp;with a suitable name for your sample so that you can recognize it, like <code class="docutils literal notranslate"><span class="pre">NPacific_DCM</span></code> or <code class="docutils literal notranslate"><span class="pre">Arabian_surface.</span></code></p>
+<p><em>Note: any time you see something in [brackets] in a command, it means you have to substitute that with your own data. Don’t include the brackets in your command.</em></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">fasta</span><span class="o">=</span><span class="p">[</span><span class="n">file1</span><span class="o">.</span><span class="n">fasta</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">file2</span><span class="o">.</span><span class="n">fasta</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">file3</span><span class="o">.</span><span class="n">fasta</span><span class="p">],</span> <span class="n">groups</span><span class="o">=</span><span class="p">[</span><span class="n">group1</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">group2</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">group3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="n">fasta</span><span class="o">=</span><span class="n">ERR598944_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="o">-</span><span class="n">ERR599001_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="o">-</span><span class="n">ERR599078_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">meso</span><span class="o">-</span><span class="n">transect</span><span class="o">-</span><span class="n">surface</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="look-at-the-groups-file">
+<span id="look-at-the-groups-file"></span><h3>5. Look at the groups file<a class="headerlink" href="#look-at-the-groups-file" title="Permalink to this headline">¶</a></h3>
+<p>This command should generate a file that is called <code class="docutils literal notranslate"><span class="pre">groups</span></code>. Take a look at it with <code class="docutils literal notranslate"><span class="pre">less</span></code>.</p>
+<p><strong><em>Hot tip #2!</em></strong> You can use the command system() if you want to use Unix commands while you are using mothur.</p>
+<p>You will see that each sequence name is linked up with the group name that you provided. That way mothur can combine all of the sequences together into one file, but you can still keep track of which one belongs to which sample. This file will be essential for allowing mothur to compare your samples later on.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">system</span><span class="p">(</span><span class="n">less</span> <span class="n">groups</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="merge-fasta-files-together">
+<span id="merge-fasta-files-together"></span><h3>6. Merge FASTA files together<a class="headerlink" href="#merge-fasta-files-together" title="Permalink to this headline">¶</a></h3>
+<p>Now you can merge all of your FASTA files together, and the .groups file will record which sequences came from which file. The output here will be a file called <code class="docutils literal notranslate"><span class="pre">merged.fa</span></code>. Again, substitute “file-1.fa” and so on with the names of your 16S rRNA fasta files.</p>
+<p><strong><em>Hot tip #3!</em></strong> use the up arrow on your keyboard to call up the last command you typed, and then edit that command instead of retyping all of the filenames again.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">merge</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="p">[</span><span class="n">file1</span><span class="o">.</span><span class="n">fa</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">file2</span><span class="o">.</span><span class="n">fa</span><span class="p">]</span><span class="o">-</span><span class="p">[</span><span class="n">file3</span><span class="o">.</span><span class="n">fa</span><span class="p">],</span> <span class="n">output</span><span class="o">=</span><span class="n">merged</span><span class="o">.</span><span class="n">fa</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">merge</span><span class="o">.</span><span class="n">files</span><span class="p">(</span><span class="nb">input</span><span class="o">=</span><span class="n">ERR598944_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="o">-</span><span class="n">ERR599001_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="o">-</span><span class="n">ERR599078_MERGED_FASTQ_16SrRNA_10000</span><span class="o">.</span><span class="n">fasta</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="n">merged</span><span class="o">.</span><span class="n">fa</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="section" id="classify-your-sequences">
+<span id="classify-your-sequences"></span><h4>7. Classify your sequences<a class="headerlink" href="#classify-your-sequences" title="Permalink to this headline">¶</a></h4>
+<p>Everything we’ve done so far is basically record-keeping. Now it’s time to do SCIENCE!</p>
+<p>We will classify our sequences by comparing them to a reference database. We will&nbsp;the SILVA database to compare these sequences. (It’s a very good, well-curated 16S rRNA database.)</p>
+<p>Note!
+You will see lots of warnings along the lines of: “[WARNING]: xxx could not be classified.” We are going to have to leave these sequences out of the analysis! This means all of the unknowns will be grouped together even though they most likely represent many different species,&nbsp;so they will be missing from our diversity analyses later on. This is why OTUs are often a better way to go here, but unfortunately our metagenomic data is too messy to be able to make nice OTUs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">classify</span><span class="o">.</span><span class="n">seqs</span><span class="p">(</span><span class="n">fasta</span><span class="o">=</span><span class="n">merged</span><span class="o">.</span><span class="n">fa</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span> <span class="n">reference</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">silva_databases</span><span class="o">/</span><span class="n">silva</span><span class="o">.</span><span class="n">seed_v119</span><span class="o">.</span><span class="n">align</span><span class="p">,</span> <span class="n">taxonomy</span><span class="o">=/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">silva_databases</span><span class="o">/</span><span class="n">silva</span><span class="o">.</span><span class="n">seed_v119</span><span class="o">.</span><span class="n">tax</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="open-classified-sequences">
+<span id="open-classified-sequences"></span><h4>8. Open classified sequences<a class="headerlink" href="#open-classified-sequences" title="Permalink to this headline">¶</a></h4>
+<p>Use scp to transfer your files over to your local desktop. Open the file that is called <code class="docutils literal notranslate"><span class="pre">merged.seed_v119.wang.tax.summary</span></code> in Excel. (You may have to change the name so the file ends in ‘.txt’ or Excel won’t recognize it as a valid file to open.) Here is the definition of the columns, from left to right:</p>
+<p>-Taxonomic level is in the farthest left-hand column. The lower the number, the larger the phylogenetic classification, starting with domain, then phylum, class, order, family, genus, species. For example, Archaea, Bacteria, Eukarya, and ‘unknown’ are taxonomic level 1. Taxonomic level 2 classifies different phyla of Archaea, Bacteria, and Eukaryotes. Taxonomic level 3 classifies different classes of those phyla, and so on.</p>
+<p>-The rankID provides a means of keeping track of where that particular organism falls. For example, the SAR_11 clade is rankID&nbsp;0.2.17.2.9, which means it is a clade within the Alphaproteobacteria (0.2.17.2), which are a clade within the Proteobacteria&nbsp;(rankID 0.2.17), which is a clade within the Bacteria (rankID 0.2).</p>
+<p>-The taxon column tells you the name of the taxon.</p>
+<p>-The daughter level tells you how may levels down you are in the phylogeny.</p>
+<p>-The ‘total’ tells you how many total sequences are&nbsp;within that taxonomic category.</p>
+<p>-Each of the following columns gives you the taxonomic breakdown for that sample.</p>
+<p>I recommend sorting your Excel spreadsheet by taxlevel. Make either a pie chart or stacked bar chart for each sample depth&nbsp;based on the taxonomic distribution at taxonomic level 2 to compare the taxonomic breakdown between each of your samples. <strong>Save these charts as Figure 1(abc) and provide a figure caption for this figure.</strong></p>
+</div>
+<div class="section" id="share-your-data">
+<span id="share-your-data"></span><h4>9. Share your data<a class="headerlink" href="#share-your-data" title="Permalink to this headline">¶</a></h4>
+<p>Your classmates may wish to&nbsp;use your taxonomy data for their project datasets. Please rename your taxonomy files and share them on the class_shared directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="n">merged</span><span class="o">.</span><span class="n">seed_v119</span><span class="o">.</span><span class="n">wang</span><span class="o">.</span><span class="n">tax</span><span class="o">.</span><span class="n">summary</span> <span class="p">[</span><span class="n">newname</span><span class="p">]</span>
+<span class="n">cp</span> <span class="p">[</span><span class="n">newname</span><span class="p">]</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">taxonomy</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mv</span> <span class="n">merged</span><span class="o">.</span><span class="n">seed_v119</span><span class="o">.</span><span class="n">wang</span><span class="o">.</span><span class="n">tax</span><span class="o">.</span><span class="n">summary</span> <span class="n">rikas_taxonomy</span><span class="o">.</span><span class="n">summary</span>
+<span class="n">cp</span> <span class="n">rikas_taxonomy</span><span class="o">.</span><span class="n">summary</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">taxonomy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="calculate-the-diversity-of-your-sample">
+<span id="calculate-the-diversity-of-your-sample"></span><h4>10. Calculate the diversity of your sample<a class="headerlink" href="#calculate-the-diversity-of-your-sample" title="Permalink to this headline">¶</a></h4>
+<p>Now we’re going to calculate the diversity at each of your sample sites. These will be pure calculations in Excel rather than on the command-line. mothur can do this using OTUs, but our data is too messy to create nice OTUs!</p>
+<p>We’ll calculate diversity using two measures: species richness (r) and the Shannon-Weiner Index (H’). The Shannon-Weiner Index (H’) is meant to take into account both the taxon&nbsp;richness (i.e. how many different taxa&nbsp;there are) and evenness (i.e. does one taxon&nbsp;dominate, or are they evenly distributed?)</p>
+<p>We are going to calculate the diversity of each of your sample sites at taxonomic level 2. This means that each entry at level 2 (i.e. ‘Euryarchaeota,’ ‘Thaumarchaeota,’ ‘Proteobacteria’) will count as one taxon. Calculate the <strong>richness</strong> and the <strong>Shannon-Weiner index</strong> for each of your samples.</p>
+<p>Richness = r = number of taxa in your sample</p>
+<p>The equation for the Shannon-Weiner index is:</p>
+<p>H’ = -Σ (Pi ln(Pi))</p>
+<p>H’ = index of taxonomic&nbsp;diversity, the Shannon-Weiner Index</p>
+<p>Pi = proportion (percent) of total sample belonging to the ith taxon</p>
+<p>ln = natural log (log base e = not the same as log!)</p>
+<p>This index takes into account not just the number of taxa&nbsp;(richness) in a sample, but also how evenly distributed the taxa&nbsp;are (evenness) within the sample.&nbsp; The index increases by having more&nbsp;richness and/or by having greater&nbsp;evenness.</p>
+<p><strong><em>Hint</em></strong>: -Σ (Pi ln(Pi)) = -((Ptaxon1*ln(Ptaxon1)) + (Ptaxon2*ln(Ptaxon2)) + (Ptaxon3*ln(Ptaxon3)) + …)</p>
+<p>I suggest that you start by calculating the total number of sequences for each sample site for all of taxonomic level 2. Then, for each taxon within taxlevel2, calculate the total proportion of sequences belonging to that&nbsp;taxon (Pi). Then calculate H’.</p>
+<p>Excel command for natural log: LN()
+Note that in Excel, LN(0) = error, so skip the cells with a value of 0.
+Pay attention to your use of parentheses!</p>
+<p>Please do these calculations in a way that is clear so that I can track your calculations. You will be submitting these Excel spreadsheets as part of your lab assignment for this week. Please compile the total number of sequences, the species richness, and the Shannon-Weiner index for each of your sample depths in a table. <strong>Save this as Table 1 and provide a caption.</strong></p>
+</div>
+<div class="section" id="compare-diversity-with-metadata">
+<span id="compare-diversity-with-metadata"></span><h4>11. Compare diversity with metadata<a class="headerlink" href="#compare-diversity-with-metadata" title="Permalink to this headline">¶</a></h4>
+<p>In your Excel spreadsheet, make 5 columns containing metadata for each of your samples (1 column each for temperature, chlorophyll, nitrate, oxygen, and salinity). Make a scatterplot for each of the metadata versus your Shannon-Weiner index (H’) for each of the samples. For example, one plot will have temperature on the x axis, and H’&nbsp;on the y axis, one will have chlorophyll on the x axis, and H’ on the y axis, and so on. For each plot, plot a trendline through the data and include&nbsp;the equation and the R-squared value. (Note that since in most cases you won’t have more than, say, 3 samples, we’re not going to do a formal statistical test on these datasets. Therefore, based on what you’ve done here, we can’t yet conclude whether the relationships are significant.) <strong>Save these 5 plots as Figure 2(abcde).</strong></p>
+</div>
+<div class="section" id="post-lab-assignment">
+<span id="post-lab-assignment"></span><h4>12. Post-lab assignment<a class="headerlink" href="#post-lab-assignment" title="Permalink to this headline">¶</a></h4>
+<p><strong>Check for understanding questions:</strong></p>
+<p>Q1.&nbsp;Many of your sequences were unclassifiable. How would this likely affect your richness calculations for each sample? Explain why.</p>
+<p>Q2. What is the difference between richness and the Shannon-Weiner index? Describe a situation in which you might have a high richness but a relatively low Shannon-Weiner index.</p>
+<p>Q3.&nbsp;Does your taxonomic diversity, as calculated by the Shannon-Weiner index, correlate with any of the metadata for your sample (temperature, chlorophyll, nitrate, oxygen, salinity)? (The R squared value should vary between 0 and 1; the stronger the correlation, the closer the R-squared value is to 1. We did not calculate p-values or conduct a more rigorous statistical analysis, but the R-squared value will tell you how closely the variables are correlated.) Write a short paragraph speculating on any correlations you find. (It’s possible the correlations will be terrible.)</p>
+<p><strong>Ecological connection question:</strong></p>
+<p>Look back at the 3-5 samples that you selected. What kinds of trends do you see differentiating them? What were you expecting to see, and do your results support your initial expectations? Write 1-2 paragraphs explaining your results in light of what we learned in class about marine taxa and diversity in various ocean basins and at different depths.</p>
+<p><strong>Summary of what to turn in next week:</strong>
+For this week’s post-lab assignment, please submit the following (should all be in the same document):</p>
+<p>-Figure&nbsp;1(abc)</p>
+<p>-Figure 2(abcde)</p>
+<p>-Table 1</p>
+<p>-The answers to the three “check for understanding” questions above</p>
+<p>-The response to the ecological connection question</p>
+<p>-Your Excel spreadsheet so that I can&nbsp;check your calculations (submitted separately)</p>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="../reference/general.html" class="btn btn-neutral float-right" title="General Stuff" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="week6-2020.html" class="btn btn-neutral" title="Week 5: Binning genomes with anvi’o" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

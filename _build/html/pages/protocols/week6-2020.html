@@ -1,0 +1,516 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Week 5: Binning genomes with anvi’o &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Week 6: Classifying taxonomy of short reads with mothur" href="week7-2020.html" />
+    <link rel="prev" title="Week 4: Mapping with bowtie2" href="week5-2020.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week3-2020.html">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week4-2020.html">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week5-2020.html">Week 4: Mapping with bowtie2</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Week 5: Binning genomes with anvi’o</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#intro-rika-will-go-over-this-at-the-beginning-of-lab">Intro (Rika will go over this at the beginning of lab)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#preparing-your-contigs-database-for-anvi-o">Preparing your contigs database for anvi’o</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#ssh-tunnel">1. ssh tunnel</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-new-folder">2. Make new folder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copying-data">3. Copying data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#get-gene-calls-and-annotations-from-prokka">4. Get gene calls and annotations from Prokka</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-the-contigs-database">5. Make the contigs database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-the-prokka-annotations">6. Import the Prokka annotations</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-for-single-copy-universal-genes">7. Search for single copy universal genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#determine-taxonomy-using-centrifuge">8. Determine taxonomy using Centrifuge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-centrifuge">9. Run Centrifuge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#import-centrifuge-data">10. Import Centrifuge data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-single-copy-gene-taxonomy">11. Run single copy gene taxonomy</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#incorporating-mapping-data">Incorporating mapping data</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#import-mapping-files-into-anvi-o-with-anvi-profile">12. Import mapping files into anvi’o with anvi-profile</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#merge-them-together-with-anvi-merge">13. Merge them together with anvi-merge</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#visualizing-and-making-your-bins">Visualizing and making your bins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#anvi-interactive">14. anvi-interactive</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-in-browser">15. Visualize in browser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-bins">16. Make bins</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#finding-bin-information">17. Finding bin information</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#analyzing-your-bins">Analyzing your bins</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#make-a-heatmap-showing-the-relative-coverage-of-the-bins-in-each-sample">18. Make a heatmap showing the relative coverage of the bins in each sample</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-the-functional-potential-of-each-of-these-genomes">19. Visualize the functional potential of each of these genomes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#final-step-sharing-data">Final step: sharing data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="week7-2020.html">Week 6: Classifying taxonomy of short reads with mothur</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/general.html">General Stuff</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html">Bioinformatics Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html#legacy-items">Legacy Items</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Week 5: Binning genomes with anvi’o</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/protocols/week6-2020.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="week-5-binning-genomes-with-anvi-o">
+<span id="week-5-binning-genomes-with-anvi-o"></span><h1>Week 5: Binning genomes with anvi’o<a class="headerlink" href="#week-5-binning-genomes-with-anvi-o" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="intro-rika-will-go-over-this-at-the-beginning-of-lab">
+<span id="intro-rika-will-go-over-this-at-the-beginning-of-lab"></span><h2>Intro (Rika will go over this at the beginning of lab)<a class="headerlink" href="#intro-rika-will-go-over-this-at-the-beginning-of-lab" title="Permalink to this headline">¶</a></h2>
+<p>This week in lab we’ll learn how disentangle individual microbial genomes from your mess of metagenomic contigs. We aren’t going to use a toy dataset this week—-we’re going straight into analysis with your metagenome datasets for your projects.</p>
+<p>Genomes are disentangled from metagenomes by clustering reads together according to two properties: <strong>coverage</strong> and <strong>tetranucleotide</strong> frequency. Basically, if contigs have similar coverage patterns between datasets, they are clustered together; and if contigs have similar kmers, they will cluster together. When we cluster contigs together like this, we get a collection of contigs that are thought to represent a reconstruction of a genome from your metagenomic sample. We call these ‘genome bins,’ or ‘metagenome-asembled genomes’ (MAGs).</p>
+<p>There is a lot of discussion in the field about which software packages are the best for making these genome bins. And of course, the one you choose will depend a lot on your dataset, what you’re trying to accomplish, and personal preference. I chose anvi’o because it is a nice visualization tool that builds in many handy features.</p>
+<p>I am drawing a lot of information for this tutorial from the anvi’o website. If you’d like to learn more, see <a class="reference external" href="http://merenlab.org/2016/06/22/anvio-tutorial-v2/">this link</a>.</p>
+</div>
+<div class="section" id="preparing-your-contigs-database-for-anvi-o">
+<span id="preparing-your-contigs-database-for-anvi-o"></span><h2>Preparing your contigs database for anvi’o<a class="headerlink" href="#preparing-your-contigs-database-for-anvi-o" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="ssh-tunnel">
+<span id="ssh-tunnel"></span><h3>1. ssh tunnel<a class="headerlink" href="#ssh-tunnel" title="Permalink to this headline">¶</a></h3>
+<p>Boot your computer as a Mac and use the Terminal to ssh in to baross. Anvio requires visualization through the server, so this week we have to create what is called an “ssh tunnel” to log into the server in a specific way. Substitute “username” below with your own Carleton login name.</p>
+<p>NOTE: Each of you will be assigned a different port number (i.e. 8080, 8081, 8082, etc.). Substitute that number for the one shown below.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssh</span> <span class="o">-</span><span class="n">L</span> <span class="mi">8080</span><span class="p">:</span><span class="n">localhost</span><span class="p">:</span><span class="mi">8080</span> <span class="n">username</span><span class="nd">@baross</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-new-folder">
+<span id="make-new-folder"></span><h3>2. Make new folder<a class="headerlink" href="#make-new-folder" title="Permalink to this headline">¶</a></h3>
+<p>Make a new directory called “anvio” inside your project folder, then change into that directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">project_directory</span>
+<span class="n">mkdir</span> <span class="n">anvio</span>
+<span class="n">cd</span> <span class="n">anvio</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copying-data">
+<span id="copying-data"></span><h3>3. Copying data<a class="headerlink" href="#copying-data" title="Permalink to this headline">¶</a></h3>
+<p>Last week, we learned how to make BAM files. This week, we’ll need them to make our bins, because they give us coverage information. You need BAM files that show the coverage of your own reads mapped against your own contigs, as well as other BAM files showing other people’s reads mapped against your contigs.</p>
+<p>Fortunately for you, I made all of these BAM files for you ahead of time. They are in this folder:</p>
+<p>/workspace/data/Genomics_Bioinformatics_shared/Tara_mappings</p>
+<p>Choose <strong>three</strong> mapping files from that folder. The ones you choose should all be from your own dataset. The names are like this, as an example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">ERR599021_assembled_vs_ERR599013_reads_sorted.bam</span></code></p>
+<p>Where ERR599021 is the reference, and reads from ERR599013 were mapped to it. You want only the bam files with your <strong>own</strong> sample number as the <strong>reference</strong>.</p>
+<p>You should also include the bam file of your own reads mapped against your own contig.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="p">[</span><span class="n">path</span> <span class="n">to</span> <span class="nb">sorted</span> <span class="o">.</span><span class="n">bam</span> <span class="n">files</span><span class="p">]</span> <span class="o">.</span>
+<span class="n">cp</span> <span class="p">[</span><span class="n">path</span> <span class="n">to</span> <span class="nb">sorted</span> <span class="o">.</span><span class="n">bai</span> <span class="n">files</span><span class="p">]</span> <span class="o">.</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599021_reads_sorted</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599021_reads_sorted</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">bai</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599013_reads_sorted</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599013_reads_sorted</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">bai</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599075_reads_sorted</span><span class="o">.</span><span class="n">bam</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">workspace</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">Tara_mappings</span><span class="o">/</span><span class="n">ERR599021_assembled_vs_ERR599075_reads_sorted</span><span class="o">.</span><span class="n">bam</span><span class="o">.</span><span class="n">bai</span>
+</pre></div>
+</div>
+<p>Finally, copy your contigs over as well. They are probably in your assembly directory. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">../</span><span class="n">ERR598983_assembly</span><span class="o">/</span><span class="n">ERR598983_assembled_reformatted</span><span class="o">.</span><span class="n">fasta</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="get-gene-calls-and-annotations-from-prokka">
+<span id="get-gene-calls-and-annotations-from-prokka"></span><h3>4. Get gene calls and annotations from Prokka<a class="headerlink" href="#get-gene-calls-and-annotations-from-prokka" title="Permalink to this headline">¶</a></h3>
+<p>The first thing you have to do is make contigs database, which contains the sequences of your contigs, plus lots of information about those contigs. This includes information from Prokka– so we have to take the information from Prokka and put it in our contigs database.</p>
+<p>First, you have to run a script on your Prokka files to convert them into a text file that we can import into anvi’o. Navigate to wherever your Prokka results are for your project assembly, and run a script to extract information from that file. Then copy it to your anvi’o folder and change directory to your anvio folder. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">prokka_project</span>
+<span class="n">gff_parser</span><span class="o">.</span><span class="n">py</span> <span class="n">PROKKA_10072018</span><span class="o">.</span><span class="n">gff</span> <span class="o">--</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span> <span class="n">prokka</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">annotation</span> <span class="n">prokka</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">annot</span><span class="o">.</span><span class="n">txt</span>
+<span class="n">cp</span> <span class="n">gene_calls</span><span class="o">.</span><span class="n">txt</span> <span class="o">../../</span><span class="n">anvio</span>
+<span class="n">cp</span> <span class="n">gene_annot</span><span class="o">.</span><span class="n">txt</span> <span class="o">../../</span><span class="n">anvio</span>
+<span class="n">cd</span> <span class="o">../../</span><span class="n">anvio</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-the-contigs-database">
+<span id="make-the-contigs-database"></span><h3>5. Make the contigs database<a class="headerlink" href="#make-the-contigs-database" title="Permalink to this headline">¶</a></h3>
+<p>Now, you make the contigs database. It will have lots of information about… well… your contigs.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">anvi-gen-contigs-database</span></code> is the anvi’o script that makes the contigs database.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">–f</span></code> is the fasta file with your contigs that you have already assembled and fixed.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">–o</span></code> provides the name of your new contigs database.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">external_gene_calls</span></code> provides the name of the Prokka file you just made so you can import the Prokka calls into your contigs database</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">--ignore-internal-stop-codons</span></code> will ignore any internal stop codons in your gene calls. Sometimes these will get included in your Prokka results by accident, but for our purposes we can ignore them.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">gen</span><span class="o">-</span><span class="n">contigs</span><span class="o">-</span><span class="n">database</span> <span class="o">-</span><span class="n">f</span> <span class="p">[</span><span class="n">your</span> <span class="n">formatted</span><span class="p">,</span> <span class="n">assembled</span> <span class="n">contigs</span><span class="p">]</span> <span class="o">-</span><span class="n">o</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">--</span><span class="n">external</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span> <span class="n">prokka</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span><span class="o">.</span><span class="n">txt</span> <span class="o">--</span><span class="n">ignore</span><span class="o">-</span><span class="n">internal</span><span class="o">-</span><span class="n">stop</span><span class="o">-</span><span class="n">codons</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-the-prokka-annotations">
+<span id="import-the-prokka-annotations"></span><h3>6. Import the Prokka annotations<a class="headerlink" href="#import-the-prokka-annotations" title="Permalink to this headline">¶</a></h3>
+<p>Import your prokka results like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">import</span><span class="o">-</span><span class="n">functions</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">i</span> <span class="n">prokka</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">annot</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-for-single-copy-universal-genes">
+<span id="search-for-single-copy-universal-genes"></span><h3>7. Search for single copy universal genes<a class="headerlink" href="#search-for-single-copy-universal-genes" title="Permalink to this headline">¶</a></h3>
+<p>Now we will search our contigs for archaeal and bacterial single-copy core genes. This will be useful later on because when we try to disentangle genomes from this metagenome, these single-copy core genes can be good markers for how complete your genome is.</p>
+<p>This process is slow, so we’re going to run it on 5 CPUs rather than just 1. You can run it on screen in the background while you move forward with step 6. It should take a little under 10 minutes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">screen</span>
+<span class="n">anvi</span><span class="o">-</span><span class="n">run</span><span class="o">-</span><span class="n">hmms</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">T</span> <span class="mi">5</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="determine-taxonomy-using-centrifuge">
+<span id="determine-taxonomy-using-centrifuge"></span><h3>8. Determine taxonomy using Centrifuge<a class="headerlink" href="#determine-taxonomy-using-centrifuge" title="Permalink to this headline">¶</a></h3>
+<p>Now we are going to figure out the taxonomy of our contigs using a program called centrifuge. Centrifuge is a program that compares your contigs to a sequence database in order to assign taxonomy to different sequences within your metagenome. We’re going to use it first to classify your contigs.</p>
+<p>If you would like to know more, you can visit the <a class="reference external" href="http://merenlab.org/2016/06/18/importing-taxonomy/#centrifuge">anvi’o tutorial</a> and the <a class="reference external" href="http://www.ccb.jhu.edu/software/centrifuge/">Centrifuge website</a>.</p>
+<p>First, export your genes from anvi’o.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">get</span><span class="o">-</span><span class="n">sequences</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">o</span> <span class="n">anvio</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span><span class="o">.</span><span class="n">fa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-centrifuge">
+<span id="run-centrifuge"></span><h3>9. Run Centrifuge<a class="headerlink" href="#run-centrifuge" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">centrifuge</span> <span class="o">-</span><span class="n">f</span> <span class="o">-</span><span class="n">x</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">CENTRIFUGE</span><span class="o">/</span><span class="n">p_compressed</span> <span class="n">anvio</span><span class="o">-</span><span class="n">gene</span><span class="o">-</span><span class="n">calls</span><span class="o">.</span><span class="n">fa</span> <span class="o">-</span><span class="n">S</span> <span class="n">centrifuge_hits</span><span class="o">.</span><span class="n">tsv</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="import-centrifuge-data">
+<span id="import-centrifuge-data"></span><h3>10. Import Centrifuge data<a class="headerlink" href="#import-centrifuge-data" title="Permalink to this headline">¶</a></h3>
+<p>Now import those centrifuge results for your contigs back in to anvi’o. Anvi’o can automatically read and import centrifuge output.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">import</span><span class="o">-</span><span class="n">taxonomy</span><span class="o">-</span><span class="k">for</span><span class="o">-</span><span class="n">genes</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">i</span> <span class="n">centrifuge_report</span><span class="o">.</span><span class="n">tsv</span> <span class="n">centrifuge_hits</span><span class="o">.</span><span class="n">tsv</span> <span class="o">-</span><span class="n">p</span> <span class="n">centrifuge</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-single-copy-gene-taxonomy">
+<span id="run-single-copy-gene-taxonomy"></span><h3>11. Run single copy gene taxonomy<a class="headerlink" href="#run-single-copy-gene-taxonomy" title="Permalink to this headline">¶</a></h3>
+<p>Now we’re going to run one more thing to help us better determine the taxonomy of your MAGs.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">run</span><span class="o">-</span><span class="n">scg</span><span class="o">-</span><span class="n">taxonomy</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">--</span><span class="n">scgs</span><span class="o">-</span><span class="n">taxonomy</span><span class="o">-</span><span class="n">data</span><span class="o">-</span><span class="nb">dir</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Space_Hogs_shared</span><span class="o">/</span><span class="n">anvio</span><span class="o">-</span><span class="n">scg</span><span class="o">-</span><span class="n">databases</span><span class="o">/</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="incorporating-mapping-data">
+<span id="incorporating-mapping-data"></span><h2>Incorporating mapping data<a class="headerlink" href="#incorporating-mapping-data" title="Permalink to this headline">¶</a></h2>
+<p>We’ve just decorated our contigs database with all kinds of things. Now, we incorporate all of the BAM files.</p>
+<div class="section" id="import-mapping-files-into-anvi-o-with-anvi-profile">
+<span id="import-mapping-files-into-anvi-o-with-anvi-profile"></span><h3>12. Import mapping files into anvi’o with anvi-profile<a class="headerlink" href="#import-mapping-files-into-anvi-o-with-anvi-profile" title="Permalink to this headline">¶</a></h3>
+<p>Now anvi’o needs to combine all of this information (your mapping, your contigs, your open reading frames, and your taxonomy) together. To do this, use anvi-profile.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">anvi-profile</span></code> is the name of the program that combines the info together</p>
+<p>-The <code class="docutils literal notranslate"><span class="pre">–i</span></code> flag provides the name of the sorted bam file that you copied in the step above.</p>
+<p>-The <code class="docutils literal notranslate"><span class="pre">-T</span></code> flag sets the number of CPUs. There are 11 of you, and 96 to spare. For now, let’s set it to 5 so we don’t blow up the server.</p>
+<p>-The <code class="docutils literal notranslate"><span class="pre">-M</span></code> flag sets a minimum contig length. In a project for publication, you’d want to use at least 1000, because the clustering of contigs is dependent on calculating their tetranucleotide frequencies (searching for patterns of kmers). You need to have a long enough contig to calculate these frequencies accurately. But for our purposes, let’s use 500 so you can use as many contigs as possible.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">profile</span> <span class="o">-</span><span class="n">i</span> <span class="p">[</span><span class="n">your</span> <span class="nb">sorted</span> <span class="n">bam</span> <span class="n">file</span><span class="p">]</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">T</span> <span class="mi">5</span> <span class="o">-</span><span class="n">M</span> <span class="mi">500</span>
+</pre></div>
+</div>
+<p><strong>Do this for each of your sorted bam files.</strong></p>
+</div>
+<div class="section" id="merge-them-together-with-anvi-merge">
+<span id="merge-them-together-with-anvi-merge"></span><h3>13. Merge them together with anvi-merge<a class="headerlink" href="#merge-them-together-with-anvi-merge" title="Permalink to this headline">¶</a></h3>
+<p>Now merge all of these profiles together using a program called anvi-merge. You have to merge together files in directories that were created by the previous profiling step. The asterisk * is a wildcard that tells the computer, ‘take all of the folders called ‘PROFILE.db’ from all of the directories and merge them together.’</p>
+<p>We’re also going to tell the computer not to bin these contigs automatically (called ‘unsupervised’ binning), we want to bin them by hand (‘supervised’ binning). So we use the –skip-concoct-binning flag.</p>
+<p>This step will take a couple minutes.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">merge</span> <span class="o">*/</span><span class="n">PROFILE</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">o</span> <span class="n">SAMPLES</span><span class="o">-</span><span class="n">MERGED</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="visualizing-and-making-your-bins">
+<span id="visualizing-and-making-your-bins"></span><h2>Visualizing and making your bins<a class="headerlink" href="#visualizing-and-making-your-bins" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="anvi-interactive">
+<span id="anvi-interactive"></span><h3>14. anvi-interactive<a class="headerlink" href="#anvi-interactive" title="Permalink to this headline">¶</a></h3>
+<p>Now the fun part with pretty pictures! Type this to open up the visualization of your contigs (of course, change the port number to the one you were assigned):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">interactive</span> <span class="o">-</span><span class="n">p</span> <span class="n">SAMPLES</span><span class="o">-</span><span class="n">MERGED</span><span class="o">/</span><span class="n">PROFILE</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">c</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">-</span><span class="n">P</span> <span class="mi">8080</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualize-in-browser">
+<span id="visualize-in-browser"></span><h3>15. Visualize in browser<a class="headerlink" href="#visualize-in-browser" title="Permalink to this headline">¶</a></h3>
+<p>Now, open up a browser (Chrome works well) and type this into the browser window to stream the results directly from the server to your browser. NOTE that each of you will be assigned a different port number (i.e. 8080, 8081, 8082, etc); use the one you logged in with in the first step.</p>
+<p>http://localhost:8080</p>
+<p>Cool, eh?</p>
+<p>Click ‘Draw’ to see your results! You should see something like this:
+<img alt="anvio screenshot" src="../../_images/anvio-screenshot-2020.png" /></p>
+<p>What you are looking at:</p>
+<p>-the tree on the inside shows the clustering of your contigs. Contigs that were more similar according to k-mer frequency and coverage clustered together.</p>
+<p>-the rings on the outside show your samples. Each ring is a different sample. This is a visualization of the mapping that you did last week, but now we can see the mapping across the whole sample, and for all samples at once. There is one black line per contig. The taller the black line, the more mapping for that contig.</p>
+<p>-the ‘ribosomal proteins’ ring shows contigs with hits to known ribosomal proteins (useful for some applications)</p>
+<p>-the ‘taxonomy’ ring shows the Centrifuge designation for the taxonomy of that particular contig.</p>
+<p>-the ‘GC content’ ring shows the average percent of bases that were G or C as opposed to A or T for that contig.</p>
+</div>
+<div class="section" id="make-bins">
+<span id="make-bins"></span><h3>16. Make bins<a class="headerlink" href="#make-bins" title="Permalink to this headline">¶</a></h3>
+<p>We will go over the process for making bins together in class.</p>
+<p>Because your datasets are fairly small, your bins are also going to be very small. Your percent completeness will be very low. Try to identify ~3-5 bins according to patterns in the mapping of the datasets as well as the GC content.</p>
+<p>When you are done making your bins, be sure to click on ‘Store bin collection’, give it a name (‘my_bins’ works), and then click on ‘Generate a static summary page,’ click on the name of your bin collection (e.g. “my_bins”), and then click on the link it gives you. It will provide lots of information about your bins. In the boxes under the heading ‘taxonomy,’ you can click on the box to get a percentage rundown of how many contigs in your bin matched specific taxa according to centrifuge, if any matched.</p>
+<p><strong>Once you have completed your binning process, take a screenshot of your anvi’o visualization and save it as ‘Figure 1.’ Write a figure caption explaining what your project dataset is, and which datasets you mapped to your sample.</strong></p>
+</div>
+<div class="section" id="finding-bin-information">
+<span id="finding-bin-information"></span><h3>17. Finding bin information<a class="headerlink" href="#finding-bin-information" title="Permalink to this headline">¶</a></h3>
+<p>You will find your new bin FASTA files in the directory called <code class="docutils literal notranslate"><span class="pre">~/project_directory/anvio/SAMPLES-MERGED/SUMMARY_my_bins</span></code>. I’ll describe all this information below for reference; it may come in handy if you decide to use this for your final project.</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">bins_summary.txt</span></code> provides just that, with information about the taxonomy, total length, number of contigs, N50, GC content, percent complete, and percent redundancy of each of your bins. This is reflected in the summary html page you generated earlier when you clicked ‘Generate a static summary page.’</p>
+<p>If you go to the directory <code class="docutils literal notranslate"><span class="pre">bins_across_samples</span></code>, you will find information about all of your bins across all samples, such as:</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">mean_coverage.txt</span></code>, which gives the average coverage of your bins across all samples</p>
+<p>-<code class="docutils literal notranslate"><span class="pre">variability.txt</span></code>, which gives you the number of single nucleotide variants (SNVs) per bin in each sample</p>
+<p>If you want to know what the rest of these files mean, look <a class="reference external" href="http://merenlab.org/2017/05/08/anvio-views/#detection">here</a>.</p>
+<p>If you go to the directory <code class="docutils literal notranslate"><span class="pre">bin_by_bin</span></code>, you will find a series of directories, one for each bin you made. Inside each directory is a wealth of information about each bin. This includes (among other things):</p>
+<p>-a FASTA file containing all of the contigs that comprise your bin (i.e. <code class="docutils literal notranslate"><span class="pre">Bin_1-contigs.fa</span></code>)</p>
+<p>-a file with all of the gene sequences and gene annotations in your bin (i.e. <code class="docutils literal notranslate"><span class="pre">Bin_1-gene-calls.txt</span></code>)</p>
+<p>-mean coverage of your bin across all of your samples (i.e. <code class="docutils literal notranslate"><span class="pre">Bin_1-mean-coverage.txt</span></code>)</p>
+<p>-files containing copies of single-copy, universal genes found in your contigs (i.e. <code class="docutils literal notranslate"><span class="pre">Bin_1-Archaea-76-hmm-sequences.txt</span></code> and <code class="docutils literal notranslate"><span class="pre">Bin_1-Bacteria_71-hmm-sequences.txt</span></code></p>
+<p>-information about single nucleotide variability in your bin– the number of SNVs per kilobase pair. (i.e. <code class="docutils literal notranslate"><span class="pre">Bin_1-variability.txt</span></code>)</p>
+</div>
+</div>
+<div class="section" id="analyzing-your-bins">
+<span id="analyzing-your-bins"></span><h2>Analyzing your bins<a class="headerlink" href="#analyzing-your-bins" title="Permalink to this headline">¶</a></h2>
+<p>OK, now the fun part! There are LOTS of things you can do with all of this information now, but for the purposes of this lab, let’s do two things.</p>
+<div class="section" id="make-a-heatmap-showing-the-relative-coverage-of-the-bins-in-each-sample">
+<span id="make-a-heatmap-showing-the-relative-coverage-of-the-bins-in-each-sample"></span><h3>18. Make a heatmap showing the relative coverage of the bins in each sample<a class="headerlink" href="#make-a-heatmap-showing-the-relative-coverage-of-the-bins-in-each-sample" title="Permalink to this headline">¶</a></h3>
+<p>If we want to visualize how abundant each of these bins is across samples, for example to say something about which genomes might be more abundant in different places, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_bin_coverage_heatmap</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">path</span> <span class="n">to</span> <span class="n">mean_coverage</span><span class="o">.</span><span class="n">txt</span> <span class="n">file</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_bin_coverage_heatmap</span><span class="o">.</span><span class="n">py</span> <span class="n">SAMPLES</span><span class="o">-</span><span class="n">MERGED</span><span class="o">/</span><span class="n">SUMMARY_my_bins</span><span class="o">/</span><span class="n">bins_across_samples</span><span class="o">/</span><span class="n">mean_coverage</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>The script will spit out a PDF file called <code class="docutils literal notranslate"><span class="pre">bin_covg_heatmap.pdf</span></code>. Copy it over to your local computer using <code class="docutils literal notranslate"><span class="pre">scp</span></code> to take a look. You should see something that looks like this:</p>
+<p><img alt="covg heatmap" src="../../_images/bin_covg_heatmap.png" /></p>
+<p>The darker the color, the higher the coverage of that bin in that particular sample. The bins are clustered according to how similar their abundance patterns are (see the dendrogram at the top to see the clustering). The figure should give you a sense of how abundant these genomes are in different sites across the ocean.</p>
+<p><em>Important side note: Most of the Python scripts you’ve been using are scripts that I wrote to parse and visualize these data files. I designed this class to be as open as possible and therefore I have not required you to come in with coding skills. However, for future reference, if you are thinking of going into a career in which bioinformatics is likely to be a prominent part of your daily life (as we should all strive to do!), then I strongly recommend taking a CS or stats class to formally learn something like Python or R to help with data parsing and visualization. You won’t regret it!</em></p>
+</div>
+<div class="section" id="visualize-the-functional-potential-of-each-of-these-genomes">
+<span id="visualize-the-functional-potential-of-each-of-these-genomes"></span><h3>19. Visualize the functional potential of each of these genomes<a class="headerlink" href="#visualize-the-functional-potential-of-each-of-these-genomes" title="Permalink to this headline">¶</a></h3>
+<p>If you’re wondering <em>why</em> these genomes are abundant in different areas– i.e., what makes these microbes different from each other that enables some to survive better in some regions? What types of metabolism do they encode? Do they have viruses inside them?– you could look at the files in <code class="docutils literal notranslate"><span class="pre">SAMPLES-MERGED/SUMMARY_my_bins/bin_by_bin/BinX/Bin_X-gene_calls.txt</span></code>, which tells you what types of genes were in that bin. If you’re focusing on this for your final project, this file is where you should go for a detailed look at the gene content.</p>
+<p>You can also get a more bird’s-eye-view of gene content with a visual summary of those gene calls by doing this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_bin_functions</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">full</span> <span class="n">path</span> <span class="n">to</span> <span class="n">the</span> <span class="n">anvi</span><span class="s1">&#39;o &#39;</span><span class="n">bin_by_bin</span><span class="s1">&#39; directory]</span>
+</pre></div>
+</div>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_bin_functions</span><span class="o">.</span><span class="n">py</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">randerson</span><span class="o">/</span><span class="n">project_directory</span><span class="o">/</span><span class="n">anvio</span><span class="o">/</span><span class="n">SAMPLES</span><span class="o">-</span><span class="n">MERGED</span><span class="o">/</span><span class="n">SUMMARY_my_bins</span><span class="o">/</span><span class="n">bin_by_bin</span>
+</pre></div>
+</div>
+<p>This will give you an output file called <code class="docutils literal notranslate"><span class="pre">for_heatmap.txt</span></code> which you’ll use in the next command. Type this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">make_function_heatmap</span><span class="o">.</span><span class="n">py</span> <span class="n">for_heatmap</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>This will create a figure called <code class="docutils literal notranslate"><span class="pre">bin_function_heatmap.pdf</span></code> that should look like this:</p>
+<p><img alt="funct heatmap" src="../../_images/bin_function_heatmap.png" /></p>
+<p>You’ve created a presence-absence grid that shows your bins at the bottom, and along the side are a bunch of gene categories. If your bin contained a gene in that category, the box for that category is colored dark green. As before, the bins are clustered according to the similarity of their functional patterns. Comparing this functions grid with your coverage heatmap might provide you with some insights (or maybe just more questions!) as to why some bins/genomes were more abundant in some regions than others.</p>
+<p>While looking at your grid, keep in mind that these bins may not be very complete, so absence of evidence is not necessarily evidence of absence.</p>
+<p>For this week’s post-lab assignment, you won’t do a mini-research question because the quality of your bins may vary, through no fault of your own. (That’s real data for you…) So you get a bit of a break this week. <strong>Please just submit the <code class="docutils literal notranslate"><span class="pre">bin_covg_heatmap.pdf</span></code> and <code class="docutils literal notranslate"><span class="pre">bin_function_heatmap.pdf</span></code> to Moodle by the start of lab next week.</strong></p>
+</div>
+<div class="section" id="final-step-sharing-data">
+<span id="final-step-sharing-data"></span><h3>Final step: sharing data<a class="headerlink" href="#final-step-sharing-data" title="Permalink to this headline">¶</a></h3>
+<p>Some of you might want access to each others’ anvio&nbsp;data for your final projects. So let’s share it on in our shared folder.</p>
+<p>First, make a&nbsp;directory with your name on it, and then put your contigs database and SAMPLES_MERGED&nbsp;directory in there.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">anvio_stuff</span><span class="o">/</span><span class="p">[</span><span class="n">your</span> <span class="n">name</span><span class="p">]</span>
+<span class="n">cp</span> <span class="n">contigs</span><span class="o">.</span><span class="n">db</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">anvio_stuff</span><span class="o">/</span><span class="p">[</span><span class="n">your</span> <span class="n">name</span><span class="p">]</span>
+<span class="n">cp</span> <span class="o">-</span><span class="n">r</span> <span class="n">SAMPLES_MERGED</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">anvio_stuff</span><span class="o">/</span><span class="p">[</span><span class="n">your</span> <span class="n">name</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="week7-2020.html" class="btn btn-neutral float-right" title="Week 6: Classifying taxonomy of short reads with mothur" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="week5-2020.html" class="btn btn-neutral" title="Week 4: Mapping with bowtie2" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

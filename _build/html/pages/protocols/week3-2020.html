@@ -1,0 +1,675 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML" href="week4-2020.html" />
+    <link rel="prev" title="Week 1: Pre-lab software checklist" href="pre-lab.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#connecting-to-baross">Connecting to baross</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#about-baross">1. About baross</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#opening-terminal">2. Opening Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ssh">3. ssh</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#ssh-cont">4. ssh (cont.)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pwd">5. pwd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#your-path">6. Your path</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#top">7. top</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#screen">8. screen</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-an-assembly-and-evaluating-it-toy-dataset">Creating an assembly and evaluating it (toy dataset)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#mkdir">9. mkdir</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cd">10. cd</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-toy-dataset">11. Copy toy dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-idba-ud-on-toy-dataset">12. Run idba-ud on toy dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#cd-to-output-directory">13. cd to output directory</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-output-files">14. The output files</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#examine-output">15. Examine output</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#fasta-file">16. Fasta file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#evaluate-assembly-quality">17. Evaluate assembly quality</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-output-by-copying-to-your-local-computer">18. View output by copying to your local computer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#bookkeeping">19. Bookkeeping</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#create-and-evaluate-assembly-project-dataset">Create and evaluate assembly (project dataset)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#screen">20. screen</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-and-change-directories">21. Make and change directories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-project-dataset">22. Copy project dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#start-assembly">23. Start assembly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#detach-from-screen">24. Detach from screen</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#searching-for-and-annotating-open-reading-frames">Searching for and annotating open reading frames</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#run-prokka">25. Run Prokka</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-output-in-fasta-format">26. View output in FASTA format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-output-in-genbank-gbk-format">27. View output in Genbank (gbk) format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#view-output-in-tab-separated-column-tsv-format">28. View output in tab-separated column (tsv) format</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#open-tsv-file">29. Open tsv file</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#annotate-your-own-project-datasets">Annotate your own project datasets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#check-on-your-project-assemblies">30. Check on your project assemblies</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#rename-assembly">31. Rename assembly</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-anvi-script-reformat-fasta">32. Run anvi-script-reformat-fasta</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-data-to-shared-folder">33. Copy data to shared folder</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-prokka-on-your-project-dataset">34. Run Prokka on your project dataset</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#share-your-data">35. Share your data</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#playing-with-big-data">Playing with “big data”</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cog-categories">36. COG categories</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-cog-categories-of-your-genes">37. Getting COG categories of your genes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#share-your-data">38. Share your data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#exit">39. Exit</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#lab-assignment-this-week">Lab assignment this week</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="week4-2020.html">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week5-2020.html">Week 4: Mapping with bowtie2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week6-2020.html">Week 5: Binning genomes with anvi’o</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week7-2020.html">Week 6: Classifying taxonomy of short reads with mothur</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/general.html">General Stuff</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html">Bioinformatics Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html#legacy-items">Legacy Items</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/protocols/week3-2020.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="week-2-introduction-to-unix-linux-and-the-server-assembly-with-idba-ud-orf-calling-and-annotation-with-prokka">
+<span id="week-2-introduction-to-unix-linux-and-the-server-assembly-with-idba-ud-orf-calling-and-annotation-with-prokka"></span><h1>Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka<a class="headerlink" href="#week-2-introduction-to-unix-linux-and-the-server-assembly-with-idba-ud-orf-calling-and-annotation-with-prokka" title="Permalink to this headline">¶</a></h1>
+<p>Rika Anderson,
+Carleton College</p>
+<p><strong>As you work through lab this week and for all subsequent weeks:</strong>
+Questions? Problems? Running into errors? Post on the lab <a class="reference external" href="https://app.slack.com/client/T018PKEPUE9/D018R70LZU3">Slack</a>. I’ll be monitoring the Slack during the weekly lab sessions (and outside of those times as well, though I can’t always guarantee a rapid response.) It’s easiest to answer your questions if you post a thorough explanation of exactly what command you ran and exactly what error message you’re getting. Please feel free to answer others’ questions too– some of you may run into the same problems.</p>
+<div class="section" id="connecting-to-baross">
+<span id="connecting-to-baross"></span><h2>Connecting to baross<a class="headerlink" href="#connecting-to-baross" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="about-baross">
+<span id="about-baross"></span><h3>1. About baross<a class="headerlink" href="#about-baross" title="Permalink to this headline">¶</a></h3>
+<p>We are going to do most of our computational work on a remote server (or computer) called baross, which is a remote server with 96 CPUs, 50 TB of storage, and 768 GB RAM. baross lives in the basement of the CMC. You can access it from  lab computers on campus, and you can also access it from your own computer at home. First, you have to learn how to access baross.</p>
+<p><strong>If you are in a computer lab on the Carleton campus:</strong>
+Boot as a Mac user on the lab computer.</p>
+<p><strong>If you are working on a personal Mac computer:</strong>
+You should be able to follow the directions below.</p>
+<p><strong>If you are working on a personal computer that is operating Windows or another OS:</strong>
+You will need to find a way to connect to a remote server. I recommend installing a <a class="reference external" href="https://ubuntu.com/tutorials/ubuntu-on-windows#1-overview">Ubuntu</a> terminal.
+If that doesn’t work, you can use <a class="reference external" href="https://www.howtogeek.com/311287/how-to-connect-to-an-ssh-server-from-windows-macos-or-linux/">PuTTY</a>. (This was included in last week’s pre-lab prep.)</p>
+</div>
+<div class="section" id="opening-terminal">
+<span id="opening-terminal"></span><h3>2. Opening Terminal<a class="headerlink" href="#opening-terminal" title="Permalink to this headline">¶</a></h3>
+<p>If you’re on a Mac, find and open the Terminal application (it should be in “Applications” in the folder called “Utilities”). If you’re on a PC or other OS, open the window you’ll use to ssh into a remote server (like Ubuntu or PuTTY or something similar).</p>
+<p><em>The terminal is the interface you will use to log in to the remote server for the rest of the course. It is also the interface we will be using to run almost all of the bioinformatics software we will be learning in this course. You can navigate through files on the server or on your computer, copy, move, and create files, and run programs using the Unix commands we learned earlier this week.</em></p>
+</div>
+<div class="section" id="ssh">
+<span id="ssh"></span><h3>3. ssh<a class="headerlink" href="#ssh" title="Permalink to this headline">¶</a></h3>
+<p>We will use something called ssh, or a secure socket shell, to remotely connect to another computer (in this case it will our class server, baross). Type the following (substituting <em>username</em> with your own Carleton username– the same name as your email address):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh username@baross.its.carleton.edu
+</pre></div>
+</div>
+</div>
+<div class="section" id="ssh-cont">
+<span id="ssh-cont"></span><h3>4. ssh (cont.)<a class="headerlink" href="#ssh-cont" title="Permalink to this headline">¶</a></h3>
+<p>You should see something like this: <code class="docutils literal notranslate"><span class="pre">[your</span> <span class="pre">username]&#64;baross.its.carleton.edu's</span> <span class="pre">password:</span></code></p>
+<p>Type in your Carleton password. NOTE!! You will not see the cursor moving when you type your password. Never fear, it is still registering what you type. Be sure to use the correct capitalization and be wary of typos.</p>
+</div>
+<div class="section" id="pwd">
+<span id="pwd"></span><h3>5. pwd<a class="headerlink" href="#pwd" title="Permalink to this headline">¶</a></h3>
+<p>Whenever you ssh in to baross, you end up in your own home directory. Each of you has your own home directory on baross. To see where you are, print your current working directory.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># How to print your working directory (find out where you are in the system)</span>
+<span class="nb">pwd</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="your-path">
+<span id="your-path"></span><h3>6. Your path<a class="headerlink" href="#your-path" title="Permalink to this headline">¶</a></h3>
+<p>You should see something like this: <code class="docutils literal notranslate"><span class="pre">/Accounts/[your</span> <span class="pre">username]</span></code></p>
+<p>This tells you what your current location is within baross, also known as your <strong>path</strong>. But before we actually run any processes, we need to learn a few important things about using a remote shared server.</p>
+<hr class="docutils" />
+<p><strong>Important things to know about when using a remote shared server</strong></p>
+</div>
+<div class="section" id="top">
+<span id="top"></span><h3>7. top<a class="headerlink" href="#top" title="Permalink to this headline">¶</a></h3>
+<p>One of the most important things to learn when using a remote shared server is how to use proper <strong>server etiquette.</strong> You don’t want to be a computer hog and take up all of the available processing power. Nobody earns friends that way. Similarly, if it looks like someone else is running a computationally intensive process, you might want to wait until theirs is done before starting your own, because running two intensive processes at the same time might slow you both down.</p>
+<p>To see what other processes are being run by other users of the same server, type: <code class="docutils literal notranslate"><span class="pre">top</span></code></p>
+<p>You should see something like this:</p>
+<p><img alt="top screenshot" src="../../_images/top_screenshot.png" /></p>
+<p>Here, we can see that randerson is the only user on baross, I am using a process called top, and it’s taking up 0.3% of one central processing unit (CPU), and zero memory. Not much is going on in this case. (All the other things listed under ‘root’ are processes that the computer is running in the background.) If someone’s process says 100.0 or 98.00 under %CPU, it means they’re using almost one entire CPU. <strong>baross has 96 CPUs and 768 gigabytes of RAM total.</strong> This is also my research server, so please be courteous and leave some CPUs for my research students. A good rule of thumb is to try to leave at least 15 CPUs available at any given time. If we try to overload the computer, it means that everyone else’s processes will have to be shared among the available CPUs, which will slow everyone down. For example, if it looks like 80 CPUs are already being used at a particular time, you might want to wait until later to run your own process.</p>
+<p>To quit out of top, type: <code class="docutils literal notranslate"><span class="pre">q</span></code></p>
+</div>
+<div class="section" id="screen">
+<span id="screen"></span><h3>8. screen<a class="headerlink" href="#screen" title="Permalink to this headline">¶</a></h3>
+<p>Sometimes we will run processes that are so computationally demanding that they will run for several hours or overnight. Some processes can sometimes take several days, or even weeks. In order to run these processes, you want to be able to close out your session on the remote server without terminating your process. To do that, you use screen. Type: <code class="docutils literal notranslate"><span class="pre">screen</span> <span class="pre">-S</span> <span class="pre">test</span></code></p>
+<p>Your terminal will open a clean window. You are now in a screen session that you have called ‘test’. Any processes you start while you are in a screen session will continue running even after you log off of the remote server.</p>
+<p>Let’s say you’ve typed the commands for a process, and now you’re ready to exit your screen session to let it run while you do other things. To leave the screen session, type: <code class="docutils literal notranslate"><span class="pre">Control+A</span> <span class="pre">d</span></code></p>
+<p>This will “detach” you from the screen session and allow you to do other things. Your screen session is still running in the background.</p>
+<p>To resume your screen session to check on things, type: <code class="docutils literal notranslate"><span class="pre">screen</span> <span class="pre">-r</span> <span class="pre">test</span></code>. (Now you’ve re-entered your screen session called ‘test.’)</p>
+<p>To kill your screen session (this is important to tidy up and keep things neat when your process is finished!) type: <code class="docutils literal notranslate"><span class="pre">Control+A</span> <span class="pre">k</span></code>.</p>
+<ul class="simple">
+<li>The computer will say: <code class="docutils literal notranslate"><span class="pre">Really</span> <span class="pre">kill</span> <span class="pre">this</span> <span class="pre">window</span> <span class="pre">[y/n]</span></code>. You type: <code class="docutils literal notranslate"><span class="pre">y</span></code>.</li>
+<li>If this doesn’t work, you can also type <code class="docutils literal notranslate"><span class="pre">exit</span></code> to terminate the screen session.</li>
+</ul>
+</div>
+</div>
+<div class="section" id="creating-an-assembly-and-evaluating-it-toy-dataset">
+<span id="creating-an-assembly-and-evaluating-it-toy-dataset"></span><h2>Creating an assembly and evaluating it (toy dataset)<a class="headerlink" href="#creating-an-assembly-and-evaluating-it-toy-dataset" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="mkdir">
+<span id="mkdir"></span><h3>9. mkdir<a class="headerlink" href="#mkdir" title="Permalink to this headline">¶</a></h3>
+<p>Let’s say we’ve gone out in to the field and taken our samples, we’ve extracted the DNA, and we’ve sent them to a sequencer. Then we get back the raw sequencing reads. One of the first things we have to do is assemble them. To do that, we’re going to use a software package called IDBA-UD. Bioinformaticians love to debate about which assembler is best, but ultimately it usually depends on the nature of your own dataset. If you find yourself with data like this someday and you want to know which assembler to use, my advice is to try a bunch of them and then compare the results using something like Quast, which we’ll test below. For now, we’re going to use IDBA-UD, which I’ve found to be a good general-purpose assembler.</p>
+<p>Make a new directory in your home folder:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir toy_dataset_directory
+</pre></div>
+</div>
+</div>
+<div class="section" id="cd">
+<span id="cd"></span><h3>10. cd<a class="headerlink" href="#cd" title="Permalink to this headline">¶</a></h3>
+<p>Change directory into your toy dataset directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> toy_dataset_directory
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-toy-dataset">
+<span id="copy-toy-dataset"></span><h3>11. Copy toy dataset<a class="headerlink" href="#copy-toy-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Copy the toy dataset into your assembly directory. Don’t forget the period at the end! This means you are copying into the directory you are currently in.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp /usr/local/data/toy_datasets/toy_dataset_reads.fasta .
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-idba-ud-on-toy-dataset">
+<span id="run-idba-ud-on-toy-dataset"></span><h3>12. Run idba-ud on toy dataset<a class="headerlink" href="#run-idba-ud-on-toy-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Run idba-ud on the toy dataset. Here is what these commands mean:</p>
+<ol class="simple">
+<li>Invoke the program <code class="docutils literal notranslate"><span class="pre">idba-ud</span></code></li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-r</span></code> gives it the “path” (directions) to the reads for your toy dataset. <code class="docutils literal notranslate"><span class="pre">../</span></code> means it is in the directory outside of the one you’re in.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-o</span></code> flag tells the program that you want the output directory to be called “toy_assembly”</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>idba_ud -r toy_dataset_reads.fasta -o toy_assembly
+</pre></div>
+</div>
+</div>
+<div class="section" id="cd-to-output-directory">
+<span id="cd-to-output-directory"></span><h3>13. cd to output directory<a class="headerlink" href="#cd-to-output-directory" title="Permalink to this headline">¶</a></h3>
+<p>When that’s done running, go into your new output directory and take a look at what’s inside:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> toy_assembly
+ls
+</pre></div>
+</div>
+</div>
+<div class="section" id="the-output-files">
+<span id="the-output-files"></span><h3>14. The output files<a class="headerlink" href="#the-output-files" title="Permalink to this headline">¶</a></h3>
+<p>You should see several files, including these:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">contig</span><span class="o">.</span><span class="n">fa</span>
+<span class="n">contig</span><span class="o">-</span><span class="mf">20.</span><span class="n">fa</span>
+<span class="n">contig</span><span class="o">-</span><span class="mf">40.</span><span class="n">fa</span>
+<span class="n">contig</span><span class="o">-</span><span class="mf">60.</span><span class="n">fa</span>
+<span class="n">contig</span><span class="o">-</span><span class="mf">80.</span><span class="n">fa</span>
+<span class="n">contig</span><span class="o">-</span><span class="mf">100.</span><span class="n">fa</span>
+<span class="n">scaffold</span><span class="o">.</span><span class="n">fa</span>
+</pre></div>
+</div>
+<p>Next week, we will talk more about how assembly works. Briefly, De Bruijn graph assembly works by searching reads for overlapping words, or “kmers.” IDBA-UD starts by searching for small kmers in the short reads to assemble those short reads into longer contigs. Then it uses those constructed contigs for a new round of assembly with longer kmers. Then it does the same with even longer kmers. It iterates through kmers of length 20, 40, 60, 80, and 100. You should get longer and longer contigs each time. Each “contig-” file gives the results of each iteration for a different kmer size. The “scaffolds.fa” file provides the final scaffolded assembly, which pulls contigs together using the paired-end data.</p>
+</div>
+<div class="section" id="examine-output">
+<span id="examine-output"></span><h3>15. Examine output<a class="headerlink" href="#examine-output" title="Permalink to this headline">¶</a></h3>
+<p>Let’s examine the assembly output files. First, take a look at your final scaffold output:</p>
+<p><code class="docutils literal notranslate"><span class="pre">less</span> <span class="pre">scaffold.fa</span></code></p>
+</div>
+<div class="section" id="fasta-file">
+<span id="fasta-file"></span><h3>16. Fasta file<a class="headerlink" href="#fasta-file" title="Permalink to this headline">¶</a></h3>
+<p>You should see a fasta file with some very long sequences in it. When you’re done looking at it, type: <code class="docutils literal notranslate"><span class="pre">q</span></code>.</p>
+</div>
+<div class="section" id="evaluate-assembly-quality">
+<span id="evaluate-assembly-quality"></span><h3>17. Evaluate assembly quality<a class="headerlink" href="#evaluate-assembly-quality" title="Permalink to this headline">¶</a></h3>
+<p>Now we’re going to evaluate the quality of our assembly. One measure of assembly quality is N50, which is the contig length for which the collection of all contigs of that length or longer contains at least 50% of the sum of the lengths of all contigs. We could theoretically calculate the N50 by hand, but often times you’ll get many, many contigs and it’s very tedious to do by hand. So we will use an assembly evaluator called Quast. Run it on your toy dataset. (Note that the command is kind of long, so scroll right in the little green box below.)</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>quast.py contig-20.fa contig-40.fa contig-60.fa contig-80.fa contig-100.fa scaffold.fa –o toy_assembly_quast_evaluation
+</pre></div>
+</div>
+<p>Here is what the commands mean:</p>
+<ol class="simple">
+<li>Invoke the program <code class="docutils literal notranslate"><span class="pre">quast.py</span></code></li>
+<li>We tell it to run the program on all of the output files of your toy assembly. Every fasta file that we list after <code class="docutils literal notranslate"><span class="pre">quast.py</span></code> will be included in the analysis.</li>
+<li>The <code class="docutils literal notranslate"><span class="pre">-o</span></code> flag will create an output directory that we will call <code class="docutils literal notranslate"><span class="pre">toy_assembly_quast_evaluation</span></code></li>
+</ol>
+</div>
+<div class="section" id="view-output-by-copying-to-your-local-computer">
+<span id="view-output-by-copying-to-your-local-computer"></span><h3>18. View output by copying to your local computer<a class="headerlink" href="#view-output-by-copying-to-your-local-computer" title="Permalink to this headline">¶</a></h3>
+<p>Quast gives you some nice visual outputs, but it’s easier to look at these if you copy them from the server to your local computer. For this, we will use <code class="docutils literal notranslate"><span class="pre">scp</span></code>, or ‘secure copy.’ It’s a lot like <code class="docutils literal notranslate"><span class="pre">cp</span></code>, except that you’re copying from a remote server to your own computer. We will use <code class="docutils literal notranslate"><span class="pre">scp</span> <span class="pre">-r</span></code> because we’re copying a directory recursively, not just a file.</p>
+<ol class="simple">
+<li>Open up another Terminal window on your own computer. Navigate to your home directory.</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+</pre></div>
+</div>
+<ol class="simple">
+<li>Type this (substituting your own username below):</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>scp -r username@baross.its.carleton.edu:~/toy_dataset_directory/toy_assembly_quast_evaluation .
+</pre></div>
+</div>
+<p>That means: copy something from the remote server baross and put it right here on my local computer.</p>
+<ol class="simple">
+<li>In your newly copied folder, double-click on the file called “report.html” and take a look. It reports the number of contigs, the contig lengths, the N50, and other statistics for each of the assembly files you entered. The graph at the bottom shows the cumulative length of your assembly (y-axis) as you add up each contig in your assembly (x-axis). Think about what the variables mean, and how the trends change with each iteration of the assembly. We’ll talk about this more in class, but for now, please keep a copy of the report.html somewhere and we’ll refer back to it when we cover assembly in class next week.</li>
+</ol>
+</div>
+<div class="section" id="bookkeeping">
+<span id="bookkeeping"></span><h3>19. Bookkeeping<a class="headerlink" href="#bookkeeping" title="Permalink to this headline">¶</a></h3>
+<p>For the sake of future bookkeeping, you’ll need to modify your scaffold assembly file so that another software program we will use in the future (called <code class="docutils literal notranslate"><span class="pre">anvi’o</span></code>) is happy. (Spaces and other weird characters are so tricky sometimes.) <strong>This will be very important for your project datasets as well.</strong> Do this while you are inside the directory with your assembly files:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>anvi-script-reformat-fasta scaffold.fa -o toy_dataset_assembled_reformatted.fa -l <span class="m">0</span> --simplify-names
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="create-and-evaluate-assembly-project-dataset">
+<span id="create-and-evaluate-assembly-project-dataset"></span><h2>Create and evaluate assembly (project dataset)<a class="headerlink" href="#create-and-evaluate-assembly-project-dataset" title="Permalink to this headline">¶</a></h2>
+<p>You’re now going to run an assembly on your project dataset. Before we start working on your project datasets, I encourage you all to start a computational lab notebook. I recommend that you open a text document in BBEdit or a similar text editor and save it on the cloud somewhere. In that notebook, it will be crucial that you keep a record of all the commands you run, especially for your project datasets. That way, if you get a funny result, or if you want to repeat an analysis, you can always go back to your lab notebook to see exactly what command you ran. In my own computational lab notebook, I record the dates and I include notes to myself about the analysis, or observations of the graphs I make. I recommend using a text document (like in BBEdit) rather than Word or Google Docs because you can copy-paste Unix commands from a text editor without worrying about formatting. These notebooks are just for you– I won’t be checking them– but now that we’re about to get into the real analysis, you should start one for your project datasets and maintain them throughout the rest of this course.</p>
+<div class="section" id="screen">
+<span id="id1"></span><h3>20. screen<a class="headerlink" href="#screen" title="Permalink to this headline">¶</a></h3>
+<p>Since the assembly will take about 10-20 minutes, I recommend running this on screen. Type:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>screen -S assembly
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-and-change-directories">
+<span id="make-and-change-directories"></span><h3>21. Make and change directories<a class="headerlink" href="#make-and-change-directories" title="Permalink to this headline">¶</a></h3>
+<p>Make a new directory in your home folder called “project_directory,” and then change directory into your newly created directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span> ~
+mkdir project_directory
+<span class="nb">cd</span> project_directory
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-project-dataset">
+<span id="copy-project-dataset"></span><h3>22. Copy project dataset<a class="headerlink" href="#copy-project-dataset" title="Permalink to this headline">¶</a></h3>
+<p>Next, copy your project dataset in to that directory. Your assigned project dataset is listed in an Excel file that is on Moodle.</p>
+<p>For example, if you have dataset <code class="docutils literal notranslate"><span class="pre">ERR590988</span></code> from the Arabian Sea, you would do this:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>cp /usr/local/data/Tara_datasets/Arabian_Sea/ERR598966_sample.fasta .
+</pre></div>
+</div>
+</div>
+<div class="section" id="start-assembly">
+<span id="start-assembly"></span><h3>23. Start assembly<a class="headerlink" href="#start-assembly" title="Permalink to this headline">¶</a></h3>
+<p>Next, start your assembly. <strong>Substitute the name of your own sample dataset for the dataset shown here.</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>idba_ud -r ERR598966_sample.fasta -o ERR598966_assembly
+</pre></div>
+</div>
+</div>
+<div class="section" id="detach-from-screen">
+<span id="detach-from-screen"></span><h3>24. Detach from screen<a class="headerlink" href="#detach-from-screen" title="Permalink to this headline">¶</a></h3>
+<p>After you’ve started the process, detach from screen:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>Ctrl+A d
+</pre></div>
+</div>
+<p>These assemblies will likely take some time. You can move on to the next steps (“Searching for and annotating open reading frames”) while this runs, and then come back to this when it’s done.</p>
+<p>To check on the progress of your assemblies, you can either use <code class="docutils literal notranslate"><span class="pre">top</span></code> to see if your assembly is still running, or you can re-attach to your screen using the instructions above.</p>
+</div>
+</div>
+<div class="section" id="searching-for-and-annotating-open-reading-frames">
+<span id="searching-for-and-annotating-open-reading-frames"></span><h2>Searching for and annotating open reading frames<a class="headerlink" href="#searching-for-and-annotating-open-reading-frames" title="Permalink to this headline">¶</a></h2>
+<p>Now that we have assembled our contigs, we want to find genes on them. That requires identifying open reading frames (ORFs), and then comparing the ORF sequences with existing databases to see if we can figure out what kinds of genes they are. There are lots of programs to identify and annotate ORFs. We’re going to use a program called Prokka, which wraps a bunch of different software into a pipeline that is nice and streamlined. Prokka basically does three things:</p>
+<ol class="simple">
+<li>Identify ORFs</li>
+<li>Compare those ORFs to databases of known genes to find the closest match and assign their putative functions</li>
+<li>Several other things (like finding rRNA or tRNA genes, CRISPRs, etc.) that we aren’t going to worry about right now.</li>
+</ol>
+<p>Prokka works well and it’s free, so we’re using it today. It tends to work best for archaeal and bacterial genomes. If you want to identify and annotate ORFs for eukaryotic genomes, there’s lots of similar software out there to do that.</p>
+<p>Go to your toy dataset directory and make a new directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">toy_dataset_directory</span>
+<span class="n">mkdir</span> <span class="n">ORF_finding</span>
+<span class="n">cd</span> <span class="n">ORF_finding</span>
+</pre></div>
+</div>
+<div class="section" id="run-prokka">
+<span id="run-prokka"></span><h3>25. Run Prokka<a class="headerlink" href="#run-prokka" title="Permalink to this headline">¶</a></h3>
+<p>Now run Prokka on your toy assembly, which is located in the toy_assembly folder:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">prokka</span> <span class="o">../</span><span class="n">toy_assembly</span><span class="o">/</span><span class="n">toy_dataset_assembly_reformatted</span><span class="o">.</span><span class="n">fa</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">prokka_toy</span>
+</pre></div>
+</div>
+<p>This means you’re invoking prokka on your reformatted toy dataset assembly, and you’re putting it in a new directory called <code class="docutils literal notranslate"><span class="pre">prokka_toy.</span></code></p>
+</div>
+<div class="section" id="view-output-in-fasta-format">
+<span id="view-output-in-fasta-format"></span><h3>26. View output in FASTA format<a class="headerlink" href="#view-output-in-fasta-format" title="Permalink to this headline">¶</a></h3>
+<p>You should see a directory called <code class="docutils literal notranslate"><span class="pre">prokka_toy</span></code>. Use <code class="docutils literal notranslate"><span class="pre">cd</span></code> to go into that folder, then use the program <code class="docutils literal notranslate"><span class="pre">less</span></code> to look at <code class="docutils literal notranslate"><span class="pre">PROKKA_09252018.faa</span></code> (or something like that– adjust according the date). You should see a fasta file with amino acid sequences. Each amino acid sequence is an open reading frame (ORF), or a putative gene that has been identified from your assembly.</p>
+<p>The cool thing is that Prokka has also annotated your genes with their putative function. You can see that in each sequence title, which provides the name of the sequence assigned by Prokka (e.g. KGLPOPID_00002) and the putative function (e.g. Proine/betaine transporter). A lot of them will say <code class="docutils literal notranslate"><span class="pre">hypothetical</span> <span class="pre">protein</span></code>, which simply means that Prokka couldn’t find a good match for that protein in public databases.</p>
+<p>Note that the file that ends in <code class="docutils literal notranslate"><span class="pre">.ffn</span></code> contains the same thing, except the ORF sequences are in nucleotide format, not amino acid.</p>
+</div>
+<div class="section" id="view-output-in-genbank-gbk-format">
+<span id="view-output-in-genbank-gbk-format"></span><h3>27. View output in Genbank (gbk) format<a class="headerlink" href="#view-output-in-genbank-gbk-format" title="Permalink to this headline">¶</a></h3>
+<p>Prokka is handy because it gives you output in all kinds of formats, which you could use for other downstream applications. For example, it gives you a Genbank output, which is commonly used in the National Institute of Health (NIH) National Centers for Biotechnology Information (NCBI) database, which we’ll be using a lot over the next few weeks. Take a look:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">gbk</span>
+</pre></div>
+</div>
+<p>For each contig, the Genbank file will give you information like the name of the contig, its length, the organism it comes from, and then information about every ORF or coding sequence (abbreviated as CDS) that contig. This includes the gene name, the location, the translation table (some organisms use slightly different codons and therefore different translation tables), its product, and its amino acid sequence. At the end of the list of ORFs for each contig, it gives you the DNA sequence of the contig.</p>
+</div>
+<div class="section" id="view-output-in-tab-separated-column-tsv-format">
+<span id="view-output-in-tab-separated-column-tsv-format"></span><h3>28. View output in tab-separated column (tsv) format<a class="headerlink" href="#view-output-in-tab-separated-column-tsv-format" title="Permalink to this headline">¶</a></h3>
+<p>Let’s look at one last output format, which is in tab-separated columns, and therefore best visualized in a spreadsheet application like Excel. Use <code class="docutils literal notranslate"><span class="pre">scp</span></code> to copy this file from the server to your own computer. Remember, type this into a Terminal window that is NOT logged on to the server.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="n">username</span><span class="nd">@baross</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span><span class="p">:</span><span class="o">~/</span><span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">ORF_finding</span><span class="o">/</span><span class="n">prokka_toy</span><span class="o">/</span><span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">tsv</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="open-tsv-file">
+<span id="open-tsv-file"></span><h3>29. Open tsv file<a class="headerlink" href="#open-tsv-file" title="Permalink to this headline">¶</a></h3>
+<p>Find your file on your local computer, and open your <code class="docutils literal notranslate"><span class="pre">.tsv</span></code> file in Excel (or Google Sheets). The column headers are in columns as follows, left to right:</p>
+<ol class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">locus_tag</span></code>: the name that Prokka assigned the ORF</li>
+<li><code class="docutils literal notranslate"><span class="pre">ftype</span></code> (feature type): whether the thing it found is an ORF (CDS) or a tRNA or rRNA gene or something else.</li>
+<li><code class="docutils literal notranslate"><span class="pre">length_bp</span></code>: length of the gene</li>
+<li><code class="docutils literal notranslate"><span class="pre">gene</span></code>: if there was a match to an identified gene, it will give the name of that gene.</li>
+<li><code class="docutils literal notranslate"><span class="pre">EC_number</span></code>: the Enzyme Commission assigns numbers to known genes according to their function. If there was a match to a known gene with an EC number, that is given here.</li>
+<li><code class="docutils literal notranslate"><span class="pre">COG</span></code>: the Clusters of Orthologous Groups (COG) database groups proteins into categories of known function. If your ORF matched a specific COG, that is listed here. There is a website describing all of the COGS <a class="reference external" href="ftp://ftp.ncbi.nih.gov/pub/COG/COG2014/static/lists/listCOGs.html">here</a>.</li>
+<li><code class="docutils literal notranslate"><span class="pre">product</span></code>: The putative annotation for your ORF.</li>
+</ol>
+</div>
+</div>
+<div class="section" id="annotate-your-own-project-datasets">
+<span id="annotate-your-own-project-datasets"></span><h2>Annotate your own project datasets<a class="headerlink" href="#annotate-your-own-project-datasets" title="Permalink to this headline">¶</a></h2>
+<p>Now that you have the general lay of the land, you’re now going to annotate your own project dataset assemblies using <code class="docutils literal notranslate"><span class="pre">Prokka</span></code>.</p>
+<div class="section" id="check-on-your-project-assemblies">
+<span id="check-on-your-project-assemblies"></span><h3>30. Check on your project assemblies<a class="headerlink" href="#check-on-your-project-assemblies" title="Permalink to this headline">¶</a></h3>
+<p>Hopefully your project assemblies are done by now. Log back into your screen session (<code class="docutils literal notranslate"><span class="pre">screen</span> <span class="pre">-r</span> <span class="pre">assembly</span></code>). When IDBA-UD finishes, it will say:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">invalid</span> <span class="n">insert</span> <span class="n">distance</span>
+<span class="n">Segmentation</span> <span class="n">fault</span>
+</pre></div>
+</div>
+<p>This is because we gave IDBA-UD single-end reads instead of paired-end reads. Never fear! Despite appearances, your assembly actually did finish. However, the use of single-end reads instead of paired-end reads means that your assemblies will NOT have scaffolds, because we couldn’t take advantage of the paired-end data to make scaffolds. So, your final assembly is just the final contig file from the longest kmer, called <code class="docutils literal notranslate"><span class="pre">contig-100.fa.</span></code></p>
+</div>
+<div class="section" id="rename-assembly">
+<span id="rename-assembly"></span><h3>31. Rename assembly<a class="headerlink" href="#rename-assembly" title="Permalink to this headline">¶</a></h3>
+<p>When your project assembly is done, change the name of your final assembly from <code class="docutils literal notranslate"><span class="pre">contig-100.fa</span></code> to a name that starts with your dataset number, followed by <code class="docutils literal notranslate"><span class="pre">_assembly.fasta</span></code>. For example, you might call it something like <code class="docutils literal notranslate"><span class="pre">ERR598966_assembly.fasta</span></code>.</p>
+<p>This way we will have standardized names and save ourselves future heartache. While in your project_directory, type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span> <span class="n">mv</span> <span class="n">ERR598966_assembly</span><span class="o">/</span><span class="n">contig</span><span class="o">-</span><span class="mf">100.</span><span class="n">fa</span> <span class="n">ERR598966_assembly</span><span class="o">.</span><span class="n">fasta</span>
+</pre></div>
+</div>
+<p>(You learned how to do this already– see your Unix cheat sheet.)</p>
+</div>
+<div class="section" id="run-anvi-script-reformat-fasta">
+<span id="run-anvi-script-reformat-fasta"></span><h3>32. Run anvi-script-reformat-fasta<a class="headerlink" href="#run-anvi-script-reformat-fasta" title="Permalink to this headline">¶</a></h3>
+<p>Run <code class="docutils literal notranslate"><span class="pre">anvi-script-reformat-fasta</span></code> on your completed project assemblies (see step 19 above). For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">anvi</span><span class="o">-</span><span class="n">script</span><span class="o">-</span><span class="n">reformat</span><span class="o">-</span><span class="n">fasta</span> <span class="n">ERR598966_assembly</span><span class="o">.</span><span class="n">fasta</span> <span class="o">-</span><span class="n">o</span> <span class="n">ERR598966_assembly_reformatted</span><span class="o">.</span><span class="n">fa</span> <span class="o">-</span><span class="n">l</span> <span class="mi">0</span> <span class="o">--</span><span class="n">simplify</span><span class="o">-</span><span class="n">names</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-data-to-shared-folder">
+<span id="copy-data-to-shared-folder"></span><h3>33. Copy data to shared folder<a class="headerlink" href="#copy-data-to-shared-folder" title="Permalink to this headline">¶</a></h3>
+<p>Please copy your reformatted project assemblies and put them into the folder that we’ll be sharing as a class, substituting the placeholder below with the name of your assembled file. This will be the shared folder for all of the data that you generate as a class. I made a folder called <code class="docutils literal notranslate"><span class="pre">assemblies</span></code> that you will put your assembled contigs into.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="p">[</span><span class="n">name</span> <span class="n">of</span> <span class="n">your</span> <span class="n">formatted</span><span class="p">,</span> <span class="n">assembled</span> <span class="n">file</span><span class="p">]</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">assemblies</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="run-prokka-on-your-project-dataset">
+<span id="run-prokka-on-your-project-dataset"></span><h3>34. Run Prokka on your project dataset<a class="headerlink" href="#run-prokka-on-your-project-dataset" title="Permalink to this headline">¶</a></h3>
+<p>If you aren’t in your project directory right now, move into it and start <code class="docutils literal notranslate"><span class="pre">prokka</span></code>. Remember that you’re still in screen. This shouldn’t take too long, but if you log out of screen, don’t forget to re-enter and then terminate the screen session!</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">project_directory</span>
+<span class="n">screen</span>
+<span class="n">prokka</span> <span class="p">[</span><span class="n">your</span> <span class="n">assembly</span> <span class="n">reformatted</span><span class="p">]</span> <span class="o">--</span><span class="n">outdir</span> <span class="n">prokka_project</span>
+<span class="n">Ctrl</span><span class="o">+</span><span class="n">A</span> <span class="n">d</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="share-your-data">
+<span id="share-your-data"></span><h3>35. Share your data<a class="headerlink" href="#share-your-data" title="Permalink to this headline">¶</a></h3>
+<p><strong>When Prokka is done, please copy your completed tsv and faa files to the shared class folder, and rename it with the name of your project dataset so it’s recognizable. for example:</strong></p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">tsv</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">PROKKA_results</span><span class="o">/</span><span class="n">ERR598995_ORFs</span><span class="o">.</span><span class="n">tsv</span>
+<span class="n">cp</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">faa</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">PROKKA_results</span><span class="o">/</span><span class="n">ERR598995_ORFs</span><span class="o">.</span><span class="n">faa</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="playing-with-big-data">
+<span id="playing-with-big-data"></span><h2>Playing with “big data”<a class="headerlink" href="#playing-with-big-data" title="Permalink to this headline">¶</a></h2>
+<p>Congratulations! You now have annotations for your entire project dataset. This means you have annotations for <em>thousands</em> of genes in your dataset. Feeling overwhelmed? Feeling excited about the endless possibilities? Feeling hungry for some questionable yet tasty LDC food? If it’s one of the first two– welcome to big data! If it’s the last one, maybe lab has gone on for too long.</p>
+<p>We’re almost done. But first we’re going to see an example of how we might analyze this kind of data.</p>
+<div class="section" id="cog-categories">
+<span id="cog-categories"></span><h3>36. COG categories<a class="headerlink" href="#cog-categories" title="Permalink to this headline">¶</a></h3>
+<p>First, there’s a text file on the server that assigns every single COG in the COG database to a specific gene category, like <code class="docutils literal notranslate"><span class="pre">Translation,</span> <span class="pre">ribosomal</span> <span class="pre">structure,</span> <span class="pre">and</span> <span class="pre">biogenesis</span></code>. You can see it by typing this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">Python_scripts</span><span class="o">/</span><span class="n">COG_numbers_categories_annotations</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-cog-categories-of-your-genes">
+<span id="getting-cog-categories-of-your-genes"></span><h3>37. Getting COG categories of your genes<a class="headerlink" href="#getting-cog-categories-of-your-genes" title="Permalink to this headline">¶</a></h3>
+<p>Let’s say you want to know how many of the genes in your dataset are responsible for translation, how many are for energy metabolism, how many are viruses, etc. Fortunately, there is a magic script available for you to do that on the server. Change directories into wherever your Prokka results are and type this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">get_ORF_COG_categories</span><span class="o">.</span><span class="n">py</span> <span class="p">[</span><span class="n">name</span> <span class="n">of</span> <span class="n">your</span> <span class="n">Prokka</span> <span class="n">tsv</span> <span class="n">file</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>And voilà! You’ll get a new file that ends in <code class="docutils literal notranslate"><span class="pre">_cog_categories.txt</span></code> with a list of all the different COG categories and the number of genes that fall into that category. Some of the COGs fall into multiple categories, denoted with, for example, <code class="docutils literal notranslate"><span class="pre">Signal_transduction_mechanisms/Transcription</span></code>. Imagine the possibilities! You can investigate so many questions about gene function in your dataset!</p>
+</div>
+<div class="section" id="share-your-data">
+<span id="id2"></span><h3>38. Share your data<a class="headerlink" href="#share-your-data" title="Permalink to this headline">¶</a></h3>
+<p>Please copy your COG categories file into the shared class folder so others can access it, and while you’re at it, change the name so it’s easily recognizable. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="n">PROKKA09252019_cog_categories</span><span class="o">.</span><span class="n">tsv</span> <span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="n">Genomics_Bioinformatics_shared</span><span class="o">/</span><span class="n">PROKKA_results</span><span class="o">/</span><span class="n">ERR590988_cog_categories</span><span class="o">.</span><span class="n">txt</span>
+</pre></div>
+</div>
+<p>Obviously, please substitute the names of your own files for the ones listed above.</p>
+</div>
+<div class="section" id="exit">
+<span id="exit"></span><h3>39. Exit<a class="headerlink" href="#exit" title="Permalink to this headline">¶</a></h3>
+<p>If you haven’t killed your screen yet, you should do so. As you did above, while in your screen session, type:
+<code class="docutils literal notranslate"><span class="pre">Ctrl</span> <span class="pre">A</span></code> and then <code class="docutils literal notranslate"><span class="pre">k</span></code>. The the computer will say: <code class="docutils literal notranslate"><span class="pre">Really</span> <span class="pre">kill</span> <span class="pre">this</span> <span class="pre">window</span> <span class="pre">[y/n]</span></code>. You type: <code class="docutils literal notranslate"><span class="pre">y</span></code>.</p>
+<p>When you are all done with your work on the server, you can log off the server by typing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">exit</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="lab-assignment-this-week">
+<span id="lab-assignment-this-week"></span><h2>Lab assignment this week<a class="headerlink" href="#lab-assignment-this-week" title="Permalink to this headline">¶</a></h2>
+<p>Write a mini research question about the COG categories you got from your ORF annotations. You can compare your sample to someone else’s. For example, you might ask, “Is there a difference in the number of genes related to the mobilome/prophage in the surface ocean compared to the mesopelagic zone?” Make an Excel bar plot based on your COG category results that demonstrates the answer to your question. Briefly explain your results and speculate as to why your results look they way they do. You should cite at least one paper from the literature that is relevant to your results. Submit this on Moodle by lab time next week.</p>
+<p><strong>I prefer to grade these blind, so please put your student ID number, rather than your name, on your assignment. (This applies to all future assignments as well.)</strong></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="week4-2020.html" class="btn btn-neutral float-right" title="Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="pre-lab.html" class="btn btn-neutral" title="Week 1: Pre-lab software checklist" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

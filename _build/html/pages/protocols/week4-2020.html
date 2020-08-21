@@ -1,0 +1,694 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML &mdash; Carleton Bioinformatics  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  
+    <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Week 4: Mapping with bowtie2" href="week5-2020.html" />
+    <link rel="prev" title="Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka" href="week3-2020.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Carleton Bioinformatics
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Protocols:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pre-lab.html">Week 1: Pre-lab software checklist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week3-2020.html">Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#logging-in-to-the-remote-server">Logging in to the remote server</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#login">1. Login</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#terminal">2. Terminal</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#connect-to-baross">3. Connect to baross</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#using-blast">Using BLAST</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#copy-sequence-of-your-first-hypothetical-orf">4. Copy sequence of your first hypothetical ORF</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#navigate-to-ncbi-site">5. Navigate to NCBI site</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#paste-sequence">6. Paste sequence</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#run-blast-via-the-web-browser">7. Run BLAST via the web browser</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#post-lab-questions">8. Post-lab questions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#doing-a-blast-against-your-own-dataset">Doing a BLAST against your own dataset</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#make-blast-database">9. Make blast database</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#find-protein">10. Find protein</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#find-protein-cont">11. Find protein (cont.)</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate-file">12. Generate file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#view-file">13. View file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#transfer-file">14. Transfer file</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blast-it">15. BLAST it</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examine-results">16. Examine results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#column-descriptions">17. Column descriptions</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blast-comparison">19. BLAST comparison</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#try-another-gene">20. Try another gene</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#blast">21. BLAST</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#examine-results">22. Examine results</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#post-lab-questions">23. Post-lab questions</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#making-an-alignment">Making An Alignment</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#aligning-sequences">24. Aligning sequences</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#align-with-muscle">25. Align with MUSCLE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-copy-to-a-local-computer">26. Secure copy to a local computer</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-with-seaview">27. Visualize with Seaview</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#making-a-tree">Making a Tree</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#formatting">28. Formatting</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#looking-at-your-phylip-file">29. Looking at your Phylip file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#build-your-tree">30. Build your tree!</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tree-output">31. Tree output</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualizing-the-tree">32. Visualizing the tree</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#asking-biological-questions-with-trees">Asking Biological Questions with Trees</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#exploring-the-kegg-database">33. Exploring the KEGG database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#getting-some-sequences-from-pfam">34. Getting some sequences from Pfam</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#copy-tara-data">35. Copy Tara data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-blast-database">36. Make BLAST database</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#blast">37. BLAST</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#look-at-blast-results">38. Look at BLAST results</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#search-and-copy-from-terminal-using-less">39. Search and copy from terminal using less</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#add-to-fasta-file">40. Add to FASTA file</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#align-with-muscle">41. Align with MUSCLE</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#convert-to-phylip">42. Convert to Phylip</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#make-tree">43. Make tree</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#visualize-with-itol">44. Visualize with ITOL</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#postlab-questions-check-for-understanding">45. Postlab questions: Check for understanding</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#post-lab-assignment">Post-lab assignment</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="week5-2020.html">Week 4: Mapping with bowtie2</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week6-2020.html">Week 5: Binning genomes with anvi’o</a></li>
+<li class="toctree-l1"><a class="reference internal" href="week7-2020.html">Week 6: Classifying taxonomy of short reads with mothur</a></li>
+</ul>
+<p class="caption"><span class="caption-text">Reference:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../reference/general.html">General Stuff</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html">Bioinformatics Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../reference/tools.html#legacy-items">Legacy Items</a></li>
+</ul>
+<p class="caption"><span class="caption-text">More info:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Authors</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Carleton Bioinformatics</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+      <li>Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="../../_sources/pages/protocols/week4-2020.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="week-3-local-alignments-and-sequence-search-with-blast-global-alignments-with-muscle-and-making-trees-with-raxml">
+<span id="week-3-local-alignments-and-sequence-search-with-blast-global-alignments-with-muscle-and-making-trees-with-raxml"></span><h1>Week 3: Local alignments and sequence search with BLAST, global alignments with MUSCLE, and making trees with RAxML<a class="headerlink" href="#week-3-local-alignments-and-sequence-search-with-blast-global-alignments-with-muscle-and-making-trees-with-raxml" title="Permalink to this headline">¶</a></h1>
+<p>Rika Anderson,
+Carleton College</p>
+<div class="section" id="logging-in-to-the-remote-server">
+<span id="logging-in-to-the-remote-server"></span><h2>Logging in to the remote server<a class="headerlink" href="#logging-in-to-the-remote-server" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="login">
+<span id="login"></span><h3>1. Login<a class="headerlink" href="#login" title="Permalink to this headline">¶</a></h3>
+<p>If you’re in a lab on campus, boot as a Mac on the lab computer.</p>
+</div>
+<div class="section" id="terminal">
+<span id="terminal"></span><h3>2. Terminal<a class="headerlink" href="#terminal" title="Permalink to this headline">¶</a></h3>
+<p>Find and open the Terminal application (<code class="docutils literal notranslate"><span class="pre">Applications/Utilities</span></code>). If you’re on a PC, open your Ubuntu terminal or your PuTTY terminal.</p>
+</div>
+<div class="section" id="connect-to-baross">
+<span id="connect-to-baross"></span><h3>3. Connect to baross<a class="headerlink" href="#connect-to-baross" title="Permalink to this headline">¶</a></h3>
+<p>Log on to the server using your Carleton username and password.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssh <span class="o">[</span>username<span class="o">]</span>@baross.its.carleton.edu
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="using-blast">
+<span id="using-blast"></span><h2>Using BLAST<a class="headerlink" href="#using-blast" title="Permalink to this headline">¶</a></h2>
+<p>Last week, we annotated thousands of ORFs in one go. As awesome as that was, you may have noticed that there were a lot of proteins labeled as “hypothetical.” Let’s see if we can learn more about some of those genes by using BLAST, which is a tool that every bioinformatician should have in their toolkit.</p>
+<div class="section" id="copy-sequence-of-your-first-hypothetical-orf">
+<span id="copy-sequence-of-your-first-hypothetical-orf"></span><h3>4. Copy sequence of your first hypothetical ORF<a class="headerlink" href="#copy-sequence-of-your-first-hypothetical-orf" title="Permalink to this headline">¶</a></h3>
+<p>Will use BLAST to compare your sequences against the National Center for Biotechnology Information (NCBI) non-redundant database of all proteins. This is a repository where biologists are required to submit their sequence data when they publish a paper. It is very comprehensive and well-curated.</p>
+<p>Change directory into your toy dataset Prokka results, and take a look at your Prokka amino acid sequence file again using the program <code class="docutils literal notranslate"><span class="pre">less</span></code>. (Again, substitute the actual names of your Prokka folder and files. Use tab complete as a shortcut!)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">ORF_finding</span><span class="o">/</span><span class="n">prokka_toy</span>
+<span class="n">less</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">faa</span>
+</pre></div>
+</div>
+<p>Copy the sequence of the <strong>third</strong> ORF in your file, the first one labeled as a ‘hypothetical protein’. You can include the first line that includes the <code class="docutils literal notranslate"><span class="pre">&gt;</span></code> symbol.</p>
+</div>
+<div class="section" id="navigate-to-ncbi-site">
+<span id="navigate-to-ncbi-site"></span><h3>5. Navigate to NCBI site<a class="headerlink" href="#navigate-to-ncbi-site" title="Permalink to this headline">¶</a></h3>
+<p>Navigate your web browser to the <a class="reference external" href="https://blast.ncbi.nlm.nih.gov/Blast.cgi">BLAST suite home page</a>. Select Protein BLAST (blastp).</p>
+</div>
+<div class="section" id="paste-sequence">
+<span id="paste-sequence"></span><h3>6. Paste sequence<a class="headerlink" href="#paste-sequence" title="Permalink to this headline">¶</a></h3>
+<p>Copy your sequence in to the box at the top of the page, and then scroll to the bottom and click “BLAST.” Give it a few minutes to think about it.</p>
+</div>
+<div class="section" id="run-blast-via-the-web-browser">
+<span id="run-blast-via-the-web-browser"></span><h3>7. Run BLAST via the web browser<a class="headerlink" href="#run-blast-via-the-web-browser" title="Permalink to this headline">¶</a></h3>
+<p>While that’s running, open a new tab in your browser, navigate to the BLAST suite home page, and try blasting your protein using <code class="docutils literal notranslate"><span class="pre">tblastn</span></code> instead of <code class="docutils literal notranslate"><span class="pre">blastp</span></code>.</p>
+<p><em>What’s the difference?</em></p>
+<p><code class="docutils literal notranslate"><span class="pre">blastp</span></code> is a protein-protein blast. When you run it online like this, you are comparing your protein sequence against the National Centers for Biotechnology Information (NCBI) non-redundant protein database, which is a giant database of protein sequences that is “non-redundant”—that is, each protein should be represented only once.</p>
+<p>In contrast, <code class="docutils literal notranslate"><span class="pre">tblastn</span></code> is a translated nucleotide blast. You are blasting your protein sequence against a translated nucleotide database. When you run it online like this, you are comparing your protein sequence against the NCBI non-redundant nucleotide database, which is a giant database of nucleotide sequences, which can include whole genomes.</p>
+<p>Isn’t this a BLAST?!?
+(Bioinformatics jokes! Not funny.)</p>
+</div>
+<div class="section" id="post-lab-questions">
+<span id="post-lab-questions"></span><h3>8. Post-lab questions<a class="headerlink" href="#post-lab-questions" title="Permalink to this headline">¶</a></h3>
+<p>For your post-lab assignment, answer the following questions in a Word document that you will upload to the Moodle:</p>
+<p><strong>Question 1: Check for understanding:</strong></p>
+<p>Take a look at your results from blastp and tblastn. In your own words, what is the difference between the two, and why do the results look different? Explain in what scenarios you might choose to use blastp over tblastn.</p>
+</div>
+<div class="section" id="doing-a-blast-against-your-own-dataset">
+<span id="doing-a-blast-against-your-own-dataset"></span><h3>Doing a BLAST against your own dataset<a class="headerlink" href="#doing-a-blast-against-your-own-dataset" title="Permalink to this headline">¶</a></h3>
+<p>We just learned how to compare a sequence of interest against all proteins in the NCBI database. But let’s say you just isolated a protein sequence that you’re interested in, and want to know if any of the ORFs or contigs in your dataset has a match to just that sequence. In that case, you would want to blast against your own sequence set, not against the giant NCBI database. Here’s how you do that.</p>
+<p>First, make sure you are in the correct directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">ORF_finding</span><span class="o">/</span><span class="n">prokka_toy</span>
+</pre></div>
+</div>
+<div class="section" id="make-blast-database">
+<span id="make-blast-database"></span><h4>9. Make blast database<a class="headerlink" href="#make-blast-database" title="Permalink to this headline">¶</a></h4>
+<p>Turn your ORF dataset into a BLAST database. Here is what the flags mean:</p>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">makeblastdb</span></code> invokes the command to make a BLAST database from your data</li>
+<li><code class="docutils literal notranslate"><span class="pre">-in</span></code> defines the file that you wish to turn into a BLAST database</li>
+<li><code class="docutils literal notranslate"><span class="pre">-dbtype</span></code>: choices are “prot” for protein and “nucl” for nucleotide.</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">makeblastdb</span> <span class="o">-</span><span class="ow">in</span> <span class="n">PROKKA_09252018</span><span class="o">.</span><span class="n">faa</span> <span class="o">-</span><span class="n">dbtype</span> <span class="n">prot</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="find-protein">
+<span id="find-protein"></span><h4>10. Find protein<a class="headerlink" href="#find-protein" title="Permalink to this headline">¶</a></h4>
+<p>Your ORFs are ready to be BLASTed. Now we need a protein of interest to search for. Let’s say you are interested in whether there are any close matches to CRISPR proteins in this dataset. The Pfam database is a handy place to find ‘seed’ sequences that represent your protein of interest. Navigate your browser to <a class="reference external" href="http://pfam.xfam.org/family/PF03787">this Pfam website</a>.</p>
+<p>This takes you to a page with information about the RAMP family of proteins, the “Repair Associated Mysterious Proteins.” While indeed mysterious, they turn out to be CRISPR-related proteins.</p>
+</div>
+<div class="section" id="find-protein-cont">
+<span id="find-protein-cont"></span><h4>11. Find protein (cont.)<a class="headerlink" href="#find-protein-cont" title="Permalink to this headline">¶</a></h4>
+<p>Click on “2871 sequences” near the top. If the link doesn’t work, click on “Alignments” on the side bar.</p>
+</div>
+<div class="section" id="generate-file">
+<span id="generate-file"></span><h4>12. Generate file<a class="headerlink" href="#generate-file" title="Permalink to this headline">¶</a></h4>
+<p>Under “format an alignment,” select your format as “FASTA” from the drop-down menu, and select gaps as “No gaps (unaligned)” from the drop-down menu. Click “Generate.”</p>
+</div>
+<div class="section" id="view-file">
+<span id="view-file"></span><h4>13. View file<a class="headerlink" href="#view-file" title="Permalink to this headline">¶</a></h4>
+<p>Take a look at the Pfam file using less or using a text editing tool on the local computer. It is a FASTA file with a bunch of “seed” sequences that represent a specific protein family from different organisms. If you want to learn more about a specific sequence, you can take the first part of the fasta title (i.e. “Q2JRT5_SYNJA”) and go to <a class="reference external" href="http://www.uniprot.org/uploadlists/">this website</a> and paste it in the box. Then select from “UniProt KB AC/ID” to “UniProtKB” in the drop-down menu on the bottom (this should be the default). You will get a table with information about your protein and which organism it comes from (in this case, a type of bacterium called <em>Synechococcus</em>).</p>
+</div>
+<div class="section" id="transfer-file">
+<span id="transfer-file"></span><h4>14. Transfer file<a class="headerlink" href="#transfer-file" title="Permalink to this headline">¶</a></h4>
+<p>We need to put the file that you downloaded to your local computer onto the remote server. As a reminder, we do this using <code class="docutils literal notranslate"><span class="pre">scp</span></code> (secure copy). It lets you copy files to and from your local computer on the command line. You have to know the path to the file you want to copy on baross, and the path to where you want to put it on your local computer. It’s a lot like cp, except it allows you to copy things between computers.</p>
+<p>Open up a new Terminal window, but <strong>DON’T</strong> log in to baross on that one. Navigate to wherever your PFAM file is, then copy it onto the server. We’re going to put the file in your ORF_finding directory:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span> <span class="o">~/</span><span class="n">Downloads</span>
+<span class="n">scp</span> <span class="n">PF03787_seed</span><span class="o">.</span><span class="n">txt</span> <span class="p">[</span><span class="n">username</span><span class="p">]</span><span class="nd">@baross</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span><span class="p">:</span><span class="o">~/</span><span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">ORF_finding</span><span class="o">/</span><span class="n">prokka_toy</span>
+</pre></div>
+</div>
+<p>It will ask you for your password; type it in and hit “Enter.”</p>
+</div>
+<div class="section" id="blast-it">
+<span id="blast-it"></span><h4>15. BLAST it<a class="headerlink" href="#blast-it" title="Permalink to this headline">¶</a></h4>
+<p>Now, BLAST it! There are many parameters you can set. The following command illustrates some common parameters.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>blastp -query PF03787_seed.txt -db PROKKA_09252018.faa -evalue 1e-05 -outfmt <span class="m">6</span> -out PF03787_vs_toy_ORFs.blastp
+</pre></div>
+</div>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">blastp</span></code> invokes the program within the blast suite that you want. (other choices are <code class="docutils literal notranslate"><span class="pre">blastn</span></code>, <code class="docutils literal notranslate"><span class="pre">blastx</span></code>, <code class="docutils literal notranslate"><span class="pre">tblastn</span></code>, <code class="docutils literal notranslate"><span class="pre">tblastx</span></code>.)</li>
+<li><code class="docutils literal notranslate"><span class="pre">-query</span></code> defines your blast query– in this case, the Pfam seed sequences for the CRISPR RAMP proteins.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-db</span></code> defines your database– in this case, the toy assembly ORFs.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-evalue</span></code> defines your maximum e-value, in this case 1x10-5</li>
+<li><code class="docutils literal notranslate"><span class="pre">-outfmt</span></code> defines the output format of your blast results. option 6 is common; you can check out <a class="reference external" href="https://www.ncbi.nlm.nih.gov/books/NBK279675/">this link</a> for other options.</li>
+<li><code class="docutils literal notranslate"><span class="pre">-out</span></code> defines the name of your output file. I like to title mine with the general format <code class="docutils literal notranslate"><span class="pre">query_vs_db.blastp</span></code> or something similar.</li>
+</ul>
+</div>
+<div class="section" id="examine-results">
+<span id="examine-results"></span><h4>16. Examine results<a class="headerlink" href="#examine-results" title="Permalink to this headline">¶</a></h4>
+<p>Now let’s check out your blast results. Take a look at your output file using <code class="docutils literal notranslate"><span class="pre">less</span></code>. (For easier visualization, you can also either copy your results (if it’s a small file) and paste in Excel, or transfer the file using <code class="docutils literal notranslate"><span class="pre">scp</span></code> and open it in Excel.)</p>
+</div>
+<div class="section" id="column-descriptions">
+<span id="column-descriptions"></span><h4>17. Column descriptions<a class="headerlink" href="#column-descriptions" title="Permalink to this headline">¶</a></h4>
+<p>Each blast hit is listed in a separate line. The columns are tabulated as follows, from left to right:</p>
+<ol class="simple">
+<li>query sequence name</li>
+<li>database sequence name</li>
+<li>percent identity</li>
+<li>alignment length</li>
+<li>number of mismatches</li>
+<li>number of gaps</li>
+<li>query start coordinates</li>
+<li>query end coordinates</li>
+<li>subject start coordinates</li>
+<li>subject end coordinates</li>
+<li>e-value</li>
+<li>bitscore</li>
+</ol>
+</div>
+<div class="section" id="blast-comparison">
+<span id="blast-comparison"></span><h4>19. BLAST comparison<a class="headerlink" href="#blast-comparison" title="Permalink to this headline">¶</a></h4>
+<p>Let’s try this another way. Run your blast again, but this time use a bigger e-value cutoff.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>blastp -query PF03787_seed.txt -db PROKKA_09252018.faa -evalue 1e-02 -outfmt <span class="m">6</span> -out PF03787_vs_toy_ORFs_evalue1e02.blastp
+</pre></div>
+</div>
+<p>Answer the following question on the Word document you will submit to Moodle:</p>
+<p><strong>Question 2: Check for understanding:</strong>
+In a few sentences/a short paragraph, describe:
+How do these BLAST results differ from your previous BLAST?
+What can you infer about what the e-value is based on these results?
+Explain in your own words why you might choose to use this method of BLAST (with a query sequence against your own dataset) rather than BLAST a query sequence against the nr database on the NCBI BLAST website.</p>
+</div>
+<div class="section" id="try-another-gene">
+<span id="try-another-gene"></span><h4>20. Try another gene<a class="headerlink" href="#try-another-gene" title="Permalink to this headline">¶</a></h4>
+<p>Now let’s try a different gene. Pfam is a good place to find general protein sequences that are grouped by sequence structure, with representatives from many different species. Let’s say you’re interested in finding a specific sequence instead.</p>
+<ol class="simple">
+<li>Go to the <a class="reference external" href="https://www.ncbi.nlm.nih.gov/protein/">NCBI Protein database</a>.</li>
+<li>Let’s look for the DNA polymerase from <em>Thermus aquaticus</em>, the famous DNA polymerase that is used in PCR. Type “DNA polymerase Thermus aquaticus’ in the search bar at the top.</li>
+<li>Click on the first hit you get. You’ll see lots of information related to that sequence.</li>
+<li>Click on “FASTA” near the top. It will give you the FASTA sequence for that protein (protein rather than DNA).</li>
+<li>Copy that sequence and paste it into a new file on baross. Here is one way to do that: use <code class="docutils literal notranslate"><span class="pre">nano</span></code> to create a new file (see command). Once in <code class="docutils literal notranslate"><span class="pre">nano</span></code>, paste your sequence into the file. Type <code class="docutils literal notranslate"><span class="pre">Ctrl+O</span></code>, <code class="docutils literal notranslate"><span class="pre">Enter</span></code>, and then <code class="docutils literal notranslate"><span class="pre">Ctrl+X</span></code>.</li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nano DNA_pol_T_aquaticus.faa
+</pre></div>
+</div>
+</div>
+<div class="section" id="blast">
+<span id="blast"></span><h4>21. BLAST<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h4>
+<p>Now you have a sequence file called <code class="docutils literal notranslate"><span class="pre">DNA_pol_T_aquaticus.faa</span></code>. BLAST it against your toy dataset:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>blastp -query DNA_pol_T_aquaticus.faa -db PROKKA_09252018.faa -outfmt <span class="m">6</span> -out DNA_pol_T_aq_vs_toy_ORFs.blastp
+</pre></div>
+</div>
+</div>
+<div class="section" id="examine-results">
+<span id="id1"></span><h4>22. Examine results<a class="headerlink" href="#examine-results" title="Permalink to this headline">¶</a></h4>
+<p>Take a look at your blastp output using less. Notice the e-value column, second from right. Most of your e-values for this range between 2.3 (at best) and 7.4 (at worst). These e-values are TERRIBLE. This means you probably didn’t have very good hits to this protein in your dataset. (What constitutes a “good” e-value is debatable and depends on your application, but a general rule of thumb is for it to be 1e-05 or lower.)</p>
+</div>
+<div class="section" id="post-lab-questions">
+<span id="id2"></span><h4>23. Post-lab questions<a class="headerlink" href="#post-lab-questions" title="Permalink to this headline">¶</a></h4>
+<p>Now choose your own protein and BLAST it against your dataset. <strong>Answer the following questions on the Moodle Word document:</strong></p>
+<p><strong>Question 3: Check for understanding:</strong></p>
+<p>In a few sentences/a short paragraph, describe the protein you chose and how you found the sequence for that protein. Show the command you executed for the blast, and show the first three matches (if there were any) with an e-vaue cutoff above 1e-05.</p>
+</div>
+</div>
+</div>
+<div class="section" id="making-an-alignment">
+<span id="making-an-alignment"></span><h2>Making An Alignment<a class="headerlink" href="#making-an-alignment" title="Permalink to this headline">¶</a></h2>
+<p>OK, so we’ve learned how to do sequence search using BLAST, which is a <em>local</em> alignment search tool. Now we’re going to learn how to make global alignments using MUSCLE, and then use those <em>global</em> alignments to make phylogenetic trees in order to learn about how genes are related.</p>
+<p>We’ll start by creating a multiple sequence alignment with MUSCLE, and then we will make bootstrapped maximum likelihood phylogenetic trees with RAxML. We’ll use the Newick files generated by RAxML to visualize trees in an online tree visualization tool called the Interactive Tree of Life (iToL). We’ll do this using toy datasets, and then try out some trees on your project datasets.</p>
+<div class="section" id="aligning-sequences">
+<span id="aligning-sequences"></span><h3>24. Aligning sequences<a class="headerlink" href="#aligning-sequences" title="Permalink to this headline">¶</a></h3>
+<p>First we have to make a multiple sequence alignment with the sequences we wish to make into a tree. This could include any gene of interest. We’re going to start by aligning a toy dataset made of genes that are part of photosystem II in photosynthesis. This file contains many sequences of the same photosystem II protein from different species.</p>
+<p>Make a new directory within your toy dataset directory for making alignments and trees, then copy the toy dataset from the data directory to your toy dataset directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mkdir</span> <span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">alignments_and_trees</span>
+<span class="n">cd</span> <span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">alignments_and_trees</span>
+<span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">toy_datasets</span><span class="o">/</span><span class="n">toy_dataset_PSII_protein</span><span class="o">.</span><span class="n">faa</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="align-with-muscle">
+<span id="align-with-muscle"></span><h3>25. Align with MUSCLE<a class="headerlink" href="#align-with-muscle" title="Permalink to this headline">¶</a></h3>
+<p>Now, we make a multiple sequence alignment using <code class="docutils literal notranslate"><span class="pre">muscle</span></code>. <code class="docutils literal notranslate"><span class="pre">muscle</span></code> uses dynamic programming to make global alignments of multiple sequences, like we did in class. It’s remarkably easy and fast.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">muscle</span> <span class="o">-</span><span class="ow">in</span> <span class="n">toy_dataset_PSII_protein</span><span class="o">.</span><span class="n">faa</span> <span class="o">-</span><span class="n">out</span> <span class="n">toy_dataset_PSII_protein_aligned</span><span class="o">.</span><span class="n">afa</span>
+</pre></div>
+</div>
+<p>What this means:</p>
+<p><code class="docutils literal notranslate"><span class="pre">muscle</span></code> is the name of the alignment program</p>
+<p><code class="docutils literal notranslate"><span class="pre">-in</span></code> defines the name of your input file, which can be either DNA or protein</p>
+<p><code class="docutils literal notranslate"><span class="pre">-out</span></code> defines the name of your output file. I like to give them an easy-to-recognize name with the extension <code class="docutils literal notranslate"><span class="pre">.afa</span></code>, which stands for “aligned fasta file.”</p>
+</div>
+<div class="section" id="secure-copy-to-a-local-computer">
+<span id="secure-copy-to-a-local-computer"></span><h3>26. Secure copy to a local computer<a class="headerlink" href="#secure-copy-to-a-local-computer" title="Permalink to this headline">¶</a></h3>
+<p>Let’s take a look at your alignment. I like to use the program Seaview to do this, and Seaview should be on your local computer (if not, go back to the Week 1 pre-lab for instructions). You will have to copy your file to your local computer using <code class="docutils literal notranslate"><span class="pre">scp.</span></code> (As before, substitute <code class="docutils literal notranslate"><span class="pre">[username]</span></code> with your own username.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="p">[</span><span class="n">username</span><span class="p">]</span><span class="nd">@baoss</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span><span class="p">:</span><span class="o">/</span><span class="n">Accounts</span><span class="o">/</span><span class="p">[</span><span class="n">username</span><span class="p">]</span><span class="o">/</span><span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">alignments_and_trees</span><span class="o">/</span><span class="n">toy_dataset_PSII_protein_aligned</span><span class="o">.</span><span class="n">afa</span> <span class="o">~/</span><span class="n">Desktop</span>
+</pre></div>
+</div>
+<p>This lets you securely copy the aligned protein file from baross to your local computer. Substitute [username] with your own username.</p>
+<p>If you wanted to securely copy any file from your local computer to baross, use the command below. It’s easy to find the path of where you want to put things– simply navigate to where you want to put it on the server, and then either copy everything before the $ or just type <code class="docutils literal notranslate"><span class="pre">pwd</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">scp</span> <span class="o">~/</span><span class="n">Desktop</span><span class="o">/</span><span class="p">[</span><span class="n">some_file</span><span class="o">.</span><span class="n">txt</span><span class="p">]</span> <span class="p">[</span><span class="n">username</span><span class="p">]</span><span class="nd">@baross</span><span class="o">.</span><span class="n">its</span><span class="o">.</span><span class="n">carleton</span><span class="o">.</span><span class="n">edu</span><span class="p">:[</span><span class="n">path_of_your_destination_directory</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualize-with-seaview">
+<span id="visualize-with-seaview"></span><h3>27. Visualize with Seaview<a class="headerlink" href="#visualize-with-seaview" title="Permalink to this headline">¶</a></h3>
+<p>Open the application called “Seaview” and drag your file over to the alignment window. You should see something like this.</p>
+<p><img alt="seaview screenshot" src="../../_images/seaview.png" /></p>
+<p>Seaview shows the names of the sequences to the left. The letters to the right are the amino acids in your sequence, color-coded to make the alignment easier to see. You can easily see that some regions of the sequence are more highly conserved than others, and that some species appear to have an insertion or deletion in specific regions of the sequence. Note that this is an amino acid alignment, not a nucleotide alignment. (You could easily use MUSCLE to align nucleotides as well.)</p>
+</div>
+</div>
+<div class="section" id="making-a-tree">
+<span id="making-a-tree"></span><h2>Making a Tree<a class="headerlink" href="#making-a-tree" title="Permalink to this headline">¶</a></h2>
+<p>Now we’re going to turn this alignment into a phylogenetic tree. We’re going to use a software package called RAxML, which is a commonly used tree-building software package that uses the maximum likelihood method to build trees.</p>
+<div class="section" id="formatting">
+<span id="formatting"></span><h3>28. Formatting<a class="headerlink" href="#formatting" title="Permalink to this headline">¶</a></h3>
+<p>First, we have to convert the aligned fasta file into a format that the tree-building software (RAxML) can handle. (A lot of the work of a bioinformatician is converting files from one format into the other.) I wrote a small Python script to convert your aligned fasta (.afa) file into Phylip file (.phy), which is what RAxML requires for input. Invoke it with the name of the script, followed by the aligned fasta file that you’d like to convert, like this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">convert_afa_to_phy</span><span class="o">.</span><span class="n">py</span> <span class="n">toy_dataset_PSII_protein_aligned</span><span class="o">.</span><span class="n">afa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="looking-at-your-phylip-file">
+<span id="looking-at-your-phylip-file"></span><h3>29. Looking at your Phylip file<a class="headerlink" href="#looking-at-your-phylip-file" title="Permalink to this headline">¶</a></h3>
+<p>The script should have outputted a file that ends in .phy. Take a look at it to see what the format looks like.</p>
+<p>The top of a Phylip file indicates the number of sequences (in this case, 17) and the number of base pairs in the aligned sequences (571). It’s followed by the first 54 bases of each sequence, broken up by a space every 10 letters. Every new line shows a new sequence (from a different species or organism). The next 54 letters of each sequence starts after the first set, and continues like this for the rest of the file. (Yes, it’s weird, but a lot of tree-building programs use this format.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="n">toy_dataset_PSII_protein_aligned</span><span class="o">.</span><span class="n">afa</span><span class="o">.</span><span class="n">phy</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="build-your-tree">
+<span id="build-your-tree"></span><h3>30. Build your tree!<a class="headerlink" href="#build-your-tree" title="Permalink to this headline">¶</a></h3>
+<p>Now let’s make a tree. Type this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">raxmlHPC</span><span class="o">-</span><span class="n">PTHREADS</span><span class="o">-</span><span class="n">AVX</span> <span class="o">-</span><span class="n">f</span> <span class="n">a</span> <span class="o">-</span><span class="c1"># 20 -m PROTGAMMAAUTO -p 12345 -x 12345 -s toy_dataset_PSII_protein_aligned.afa.phy -n toy_dataset_PSII_protein.tree -T 4</span>
+</pre></div>
+</div>
+<p>What this means:</p>
+<p><code class="docutils literal notranslate"><span class="pre">-raxmlHPC-PTHREADS-AVX</span></code> is the name of the software package. This one is configured for the processors that are specific to this server.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-f</span> <span class="pre">a</span></code> allows for rapid bootstrapping. This means RAxML will do a maximum likelihood search based on your protein sequences, and then bootstrap it as many times as you wish.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-#</span> <span class="pre">20</span></code> tells the program to bootstrap 20 times.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-m</span> <span class="pre">PROTGAMMAAUTO</span></code> tells the program that these are protein sequences, and tells the program how to model protein evolution. To get into this is beyond the scope of this class, but fortunately RAxML is able to automatically choose the best one for us based on the number of sequences and the type of data we have.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-p</span></code> and <code class="docutils literal notranslate"><span class="pre">–x</span></code> provide seed numbers so that the program can generate random numbers for the bootstrapping process.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s</span></code> gives the name of your input Phylip file</p>
+<p><code class="docutils literal notranslate"><span class="pre">-n</span></code> gives the name of your output Newick file, which will be made into a tree.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-T</span></code> determines the number of threads. This is sort of like determining how many processors you’ll use up for this process. Today, we’ll use 4. Please don’t use more than this without asking first.</p>
+<p>NOTE: “bootstrapping” is a statistical test used to assess the reliability of your tree topology (its shape). We’ll talk about this more in class next week.</p>
+<div class="section" id="tree-output">
+<span id="tree-output"></span><h4>31. Tree output<a class="headerlink" href="#tree-output" title="Permalink to this headline">¶</a></h4>
+<p>You’ve made a tree! Congratulations! Let’s look at the raw RAxML output. You should have some files called:</p>
+<p><code class="docutils literal notranslate"><span class="pre">RAxML_bestTree.toy_dataset_PSII_protein.tree</span></code>
+<code class="docutils literal notranslate"><span class="pre">RAxML_bipartitionsBranchLabels.toy_dataset_PSII_protein.tree</span></code>
+<code class="docutils literal notranslate"><span class="pre">RAxML_bipartitions.toy_dataset_PSII_protein.tree</span></code> &lt;– this is the one you want, because it gives you bootstrap values at the nods on the tree. (more on bootstrapping next week.)
+<code class="docutils literal notranslate"><span class="pre">RAxML_bootstrap.toy_dataset_PSII_protein.tree</span></code>
+<code class="docutils literal notranslate"><span class="pre">RAxML_info.toy_dataset_PSII_protein.tree</span></code></p>
+<p>Take a look at the bipartitions file using <code class="docutils literal notranslate"><span class="pre">less</span></code>.</p>
+<p>This is a Newick file, and it’s a common format for phylogenetic trees.</p>
+</div>
+<div class="section" id="visualizing-the-tree">
+<span id="visualizing-the-tree"></span><h4>32. Visualizing the tree<a class="headerlink" href="#visualizing-the-tree" title="Permalink to this headline">¶</a></h4>
+<p>Copy your Newick file (toy_dataset_PSII_protein.tree) to your local computer using <code class="docutils literal notranslate"><span class="pre">scp</span></code>. Open up a web browser on your local computer and navigate to the <a class="reference external" href="http://itol.embl.de/">IToL website</a> and create an account for yourself.</p>
+<p>Click on “Upload tree files” and find your tree file and upload it.</p>
+<p>Click on your tree. You should see it open in your window. You can play around with the settings on the right—you can make it circular or normal, you can display the bootstrap values as symbols or as text, and if you click on the leaves (the tips) or the nodes (the interior bifurcations) of the tree, you can color code them. Play around with it, and then click on the “Export” tab, choose the PDF format, and click “Export.” It should pop up in a new tab. Download it and include it in your postlab writeup this week as “Figure 1.” Be sure to include a figure caption.</p>
+</div>
+</div>
+</div>
+<div class="section" id="asking-biological-questions-with-trees">
+<span id="asking-biological-questions-with-trees"></span><h2>Asking Biological Questions with Trees<a class="headerlink" href="#asking-biological-questions-with-trees" title="Permalink to this headline">¶</a></h2>
+<p>Now that you know how to make an alignment, create a phylogenetic tree, and visualize it, we’re going to ask a biological question that can be answered with trees:</p>
+<p><strong>What evolutionary clade do photosynthesis genes from surface waters fall into?</strong></p>
+<p>We would probably expect to see more photosynthesis genes related to photosynthetic bacteria, and perhaps seaweed, in the surface oceans, but not photosynthesis genes related to terrestrial plants. We can make a phylogenetic tree to determine whether that’s true, and which specific organisms they’re most closely related to.</p>
+<div class="section" id="exploring-the-kegg-database">
+<span id="exploring-the-kegg-database"></span><h3>33. Exploring the KEGG database<a class="headerlink" href="#exploring-the-kegg-database" title="Permalink to this headline">¶</a></h3>
+<p>First, we need to identify a target protein within the photosynthetic apparatus. For this, let’s go to the KEGG Pathways website, which has a description of major metabolic pathways and the proteins that comprise them. It’s a lot like the COG database, but better updated, and with a lot more information.</p>
+<p><a class="reference external" href="http://www.genome.jp/kegg/pathway.html">Link to KEGG database</a></p>
+<p>Click on ‘Energy’ under ‘Metabolism’ and then click on ‘Photosynthesis.’ You should see a depiction of the photosynthetic proteins. Let’s choose a protein within the photosynthetic apparatus that might be of interest. For the sake of this example, let’s choose psbA: it’s part of the photosystem II p680 reaction center D protein. Click on the box labeled ‘PsbA’ beneath the figure. Now you’ll see lots of information about that particular gene. You can use the KEGG website like this to figure out which proteins or genes might be of interest for your projects later on.</p>
+</div>
+<div class="section" id="getting-some-sequences-from-pfam">
+<span id="getting-some-sequences-from-pfam"></span><h3>34. Getting some sequences from Pfam<a class="headerlink" href="#getting-some-sequences-from-pfam" title="Permalink to this headline">¶</a></h3>
+<p>However, it will be more useful for us to have a nice set of seed sequences to align against– so let’s go back to Pfam. Click on this <a class="reference external" href="http://pfam.xfam.org/family/PF00124">link</a>.</p>
+<p>Click on ‘1953’ sequences near the top click on ‘FASTA’ from the dropdown menu, click ‘No gaps (unaligned)’ from the drop-down menu, and save the resulting file on baross within a new directory in your toy dataset directory. It would probably be best to create a separate folder for this. Use scp to transfer it over to that new directory, or you could copy the file and create a new file on baross using nano and copy it there (many options!).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cd</span>
+<span class="n">mkdir</span> <span class="n">toy_dataset_directory</span><span class="o">/</span><span class="n">tree_exercise_1</span>
+<span class="n">cd</span> <span class="n">toy_datset_directory</span><span class="o">/</span><span class="n">tree_exercise_1</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="copy-tara-data">
+<span id="copy-tara-data"></span><h3>35. Copy Tara data<a class="headerlink" href="#copy-tara-data" title="Permalink to this headline">¶</a></h3>
+<p>First we have to find matches to that gene in our dataset. So, we have to BLAST this dataset against the dataset of interest. We’re going to use ORFs from a Tara Oceans dataset from the North Atlantic surface oceans off the East Coast. Copy it over to your current directory.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">local</span><span class="o">/</span><span class="n">data</span><span class="o">/</span><span class="n">toy_datasets</span><span class="o">/</span><span class="n">ERR598983_ORFs</span><span class="o">.</span><span class="n">faa</span> <span class="o">.</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-blast-database">
+<span id="id3"></span><h3>36. Make BLAST database<a class="headerlink" href="#make-blast-database" title="Permalink to this headline">¶</a></h3>
+<p>Make this dataset into a BLAST database.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">makeblastdb</span> <span class="o">-</span><span class="ow">in</span> <span class="n">ERR598983_ORFs</span><span class="o">.</span><span class="n">faa</span> <span class="o">-</span><span class="n">dbtype</span> <span class="n">prot</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="blast">
+<span id="id4"></span><h3>37. BLAST<a class="headerlink" href="#blast" title="Permalink to this headline">¶</a></h3>
+<p>BLAST it.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">blastp</span> <span class="o">-</span><span class="n">query</span> <span class="n">PF00124_seed</span><span class="o">.</span><span class="n">txt</span> <span class="o">-</span><span class="n">db</span> <span class="n">ERR598983_ORFs</span><span class="o">.</span><span class="n">faa</span> <span class="o">-</span><span class="n">outfmt</span> <span class="mi">6</span> <span class="o">-</span><span class="n">evalue</span> <span class="mf">1e-05</span> <span class="o">-</span><span class="n">out</span> <span class="n">PF00124_vs_ERR598983_ORFs</span><span class="o">.</span><span class="n">blastp</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="look-at-blast-results">
+<span id="look-at-blast-results"></span><h3>38. Look at BLAST results<a class="headerlink" href="#look-at-blast-results" title="Permalink to this headline">¶</a></h3>
+<p>Take a look at the results. You’ll notice lots of hits. However, you’ll see that all of the hits were to a single ORF: contig-100_83_1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="n">PF00124_vs_ERR598983_ORFs</span><span class="o">.</span><span class="n">blastp</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="search-and-copy-from-terminal-using-less">
+<span id="search-and-copy-from-terminal-using-less"></span><h3>39. Search and copy from terminal using less<a class="headerlink" href="#search-and-copy-from-terminal-using-less" title="Permalink to this headline">¶</a></h3>
+<p>Let’s extract it. Open up the original file with the open reading frames, and copy the sequence for contig-100_83_1.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">less</span> <span class="n">ERR598983_ORFs</span><span class="o">.</span><span class="n">faa</span>
+</pre></div>
+</div>
+<p>You can search for a specific contig by typing:
+<code class="docutils literal notranslate"><span class="pre">/contig-100_83_1</span></code></p>
+</div>
+<div class="section" id="add-to-fasta-file">
+<span id="add-to-fasta-file"></span><h3>40. Add to FASTA file<a class="headerlink" href="#add-to-fasta-file" title="Permalink to this headline">¶</a></h3>
+<p>Now let’s add it to the original Pfam file and make a tree from all of those sequences. First, make a copy of the original Pfam file and give it a new name. Then use nano to open it up and paste the ORF sequence to the bottom.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cp</span> <span class="n">PF00124_seed</span><span class="o">.</span><span class="n">txt</span> <span class="n">PF00124_seed_plus_new_ORF</span><span class="o">.</span><span class="n">fasta</span>
+<span class="n">nano</span> <span class="n">PF00124_seed_plus_new_ORF</span><span class="o">.</span><span class="n">fasta</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="align-with-muscle">
+<span id="id5"></span><h3>41. Align with MUSCLE<a class="headerlink" href="#align-with-muscle" title="Permalink to this headline">¶</a></h3>
+<p>Make a multiple sequence alignment with <code class="docutils literal notranslate"><span class="pre">muscle</span></code>.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">muscle</span> <span class="o">-</span><span class="ow">in</span> <span class="n">PF00124_seed_plus_new_ORF</span><span class="o">.</span><span class="n">fasta</span> <span class="o">-</span><span class="n">out</span> <span class="n">PF00124_seed_plus_new_ORF_aligned</span><span class="o">.</span><span class="n">afa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="convert-to-phylip">
+<span id="convert-to-phylip"></span><h3>42. Convert to Phylip<a class="headerlink" href="#convert-to-phylip" title="Permalink to this headline">¶</a></h3>
+<p>Convert your aligned FASTA file to a Phylip file.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">convert_afa_to_phy</span><span class="o">.</span><span class="n">py</span> <span class="n">PF00124_seed_plus_new_ORF_aligned</span><span class="o">.</span><span class="n">afa</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="make-tree">
+<span id="make-tree"></span><h3>43. Make tree<a class="headerlink" href="#make-tree" title="Permalink to this headline">¶</a></h3>
+<p>Make your tree. When it’s done, open it up in IToL and make a pretty tree image. (The RAxML run might take a few minutes, so you might get started on the last question for the day while this runs.)</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">raxmlHPC</span><span class="o">-</span><span class="n">PTHREADS</span><span class="o">-</span><span class="n">AVX</span> <span class="o">-</span><span class="n">f</span> <span class="n">a</span> <span class="o">-</span><span class="c1"># 20 -m PROTGAMMAAUTO -p 12345 -x 12345 -s PF00124_seed_plus_new_ORF_aligned.phy -n PF00124_seed_plus_new_ORF.tree -T 4</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="visualize-with-itol">
+<span id="visualize-with-itol"></span><h3>44. Visualize with ITOL<a class="headerlink" href="#visualize-with-itol" title="Permalink to this headline">¶</a></h3>
+<p>Visualize your tree with ITOL.</p>
+</div>
+<div class="section" id="postlab-questions-check-for-understanding">
+<span id="postlab-questions-check-for-understanding"></span><h3>45. Postlab questions: Check for understanding<a class="headerlink" href="#postlab-questions-check-for-understanding" title="Permalink to this headline">¶</a></h3>
+<p>Include an image of your tree and call it ‘Figure 2.’ Include a figure caption.</p>
+</div>
+</div>
+<div class="section" id="post-lab-assignment">
+<span id="post-lab-assignment"></span><h2>Post-lab assignment<a class="headerlink" href="#post-lab-assignment" title="Permalink to this headline">¶</a></h2>
+<p>For your post-lab assignment, compile all of the Moodle questions above into a single document. There are three ‘check for understanding’ questions listed above, and two figures. In addition, answer the critical thinking question below.</p>
+<p><strong>Critical thinking question:</strong></p>
+<p>Develop a question about your project dataset that you can answer using BLAST, making trees, or both. For example, your question could be something like: ‘how many ORFs in my dataset have a match to a specific type of photosynthesis gene?’ or ‘I found a cytochrome c gene in my dataset. Where does it fit on a tree of other cytochrome C genes from Pfam?’</p>
+<p><em>For this week’s postlab assignment, describe:</em></p>
+<p>-What question did you ask?</p>
+<p>-How did you go about answering it? (Write this like you would a mini Materials and Methods section: include which databases you searched, which software packages you used, and which important flags you used in your commands. You should include enough information for an intelligent researcher to be able to replicate your results.)</p>
+<p>-What were your results? Describe them. (Write this like you would a mini Results section. Include a figure if appropriate.)</p>
+<p>-What does this tell you about your project dataset? (Think of this as a mini Discussion section: I’m looking for evidence that you thought about your results and how they connect more broadly to some ecological or evolutionary pattern in your dataset.)</p>
+<p>Compile all of this together into a Word (or similar) document and submit via Moodle by lab next week. <strong>I prefer to grade these blind, so please put your student ID number, rather than your name, on your assignment. (This applies to all future assignments as well.)</strong></p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="week5-2020.html" class="btn btn-neutral float-right" title="Week 4: Mapping with bowtie2" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="week3-2020.html" class="btn btn-neutral" title="Week 2: Introduction to Unix/Linux and the Server; Assembly with IDBA-UD; ORF Calling and Annotation with Prokka" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, Rika Anderson.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+  
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
